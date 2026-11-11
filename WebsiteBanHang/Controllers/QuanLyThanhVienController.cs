@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebsiteBanHang.Models;
+using WebsiteBanHang.Security;
 
 namespace WebsiteBanHang.Controllers
 {
@@ -59,6 +60,13 @@ namespace WebsiteBanHang.Controllers
 
             try
             {
+                if (db.ThanhVien.Any(n => n.TaiKhoan == tv.TaiKhoan))
+                {
+                    ModelState.AddModelError("TaiKhoan", "Tài khoản đã tồn tại.");
+                    return View(tv);
+                }
+                tv.MaThanhVien = 0;
+                tv.MatKhau = PasswordService.Hash(tv.MatKhau);
                 db.ThanhVien.Add(tv);
                 db.SaveChanges();
 
@@ -95,6 +103,10 @@ namespace WebsiteBanHang.Controllers
         {
             LoadDropdown(tv.MaLoaiTV, tv.CauHoi);
 
+            var changePassword = !string.IsNullOrWhiteSpace(tv.MatKhau);
+            if (!changePassword)
+                ModelState.Remove("MatKhau");
+
             if (!ModelState.IsValid)
                 return View(tv);
 
@@ -104,8 +116,14 @@ namespace WebsiteBanHang.Controllers
 
             try
             {
+                if (db.ThanhVien.Any(n => n.TaiKhoan == tv.TaiKhoan && n.MaThanhVien != tv.MaThanhVien))
+                {
+                    ModelState.AddModelError("TaiKhoan", "Tài khoản đã tồn tại.");
+                    return View(tv);
+                }
                 thanhVien.TaiKhoan = tv.TaiKhoan;
-                thanhVien.MatKhau = tv.MatKhau;
+                if (changePassword)
+                    thanhVien.MatKhau = PasswordService.Hash(tv.MatKhau);
                 thanhVien.HoTen = tv.HoTen;
                 thanhVien.DiaChi = tv.DiaChi;
                 thanhVien.Email = tv.Email;

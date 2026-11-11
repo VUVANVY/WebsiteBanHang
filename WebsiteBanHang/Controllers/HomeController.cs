@@ -7,6 +7,7 @@ using WebsiteBanHang.Models;
 using System.Web.Security;
 using CaptchaMvc.HtmlHelpers;
 using CaptchaMvc;
+using WebsiteBanHang.Security;
 
 namespace WebsiteBanHang.Controllers
 {
@@ -54,7 +55,8 @@ namespace WebsiteBanHang.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult DangKy(ThanhVien tv)    //dùng post để truyền data lên csdl, dùng biến tv trong model thay formcollection
+        [ValidateAntiForgeryToken]
+        public ActionResult DangKy([Bind(Include = "TaiKhoan,MatKhau,HoTen,DiaChi,Email,SoDienThoai,CauHoi,CauTraLoi")] ThanhVien tv)
         {
             ViewBag.CauHoi = new SelectList(LoadCauHoi());  //lưu câu hỏi đã chọn trong dropdownlist vào csdl
             //Kiểm tra captcha hợp lệ
@@ -62,7 +64,14 @@ namespace WebsiteBanHang.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if (db.ThanhVien.Any(n => n.TaiKhoan == tv.TaiKhoan))
+                    {
+                        ModelState.AddModelError("TaiKhoan", "Tài khoản đã tồn tại.");
+                        return View(tv);
+                    }
+                    tv.MaThanhVien = 0;
                     tv.MaLoaiTV = 3;
+                    tv.MatKhau = PasswordService.Hash(tv.MatKhau);
                     ViewBag.ThongBao = "Thêm thành công";
                     //Thêm khách hàng vào csdl
                     db.ThanhVien.Add(tv);  //sau khi lấy được các thuộc tính trong biến tv qua các textbox thì truyền tv vào dbset ThanhViens
@@ -76,7 +85,7 @@ namespace WebsiteBanHang.Controllers
         }
 
         //Load câu hỏi để đưa vào dropdownlist
-        public List<string> LoadCauHoi()    
+        private List<string> LoadCauHoi()
         {
             List<string> lstCauHoi = new List<string>();    //tạo list câu hỏi chứa câu hỏi
             lstCauHoi.Add("Họ tên người cha bạn là gì?");
@@ -94,18 +103,27 @@ namespace WebsiteBanHang.Controllers
 
         //xd action dang nhap
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DangNhap(FormCollection f)
         {
-            string taikhoan = f["txtTenDangNhap"].ToString();   //lấy chuỗi trong txtTenDangNhap
-            string matKhau = f["txtMatKhau"].ToString();    //lấy chuỗi trong txtMatKhau
+            string taikhoan = f["txtTenDangNhap"];
+            string matKhau = f["txtMatKhau"];
+            if (string.IsNullOrWhiteSpace(taikhoan) || string.IsNullOrEmpty(matKhau))
+                return Content("Tài khoản hoặc mật khẩu không chính xác.");
 
-            ThanhVien tv = db.ThanhVien.SingleOrDefault(n => n.TaiKhoan == taikhoan && n.MatKhau == matKhau);      //so sánh với tk và mk trong csdl
-            if (tv != null)
+            ThanhVien tv = db.ThanhVien.SingleOrDefault(n => n.TaiKhoan == taikhoan);
+            bool needsUpgrade;
+            if (tv != null && PasswordService.Verify(matKhau, tv.MatKhau, out needsUpgrade))
             {
                 var lstQuyen = db.LoaiThanhVien_Quyen.Where(n => n.MaLoaiTV == tv.MaLoaiTV).ToList();   //lấy ra list quyền tương ứng loaitv
                 string Quyen = "";
                 if (lstQuyen.Count() != 0)
                 {
+                    if (needsUpgrade)
+                    {
+                        tv.MatKhau = PasswordService.Hash(matKhau);
+                        db.SaveChanges();
+                    }
                     foreach (var item in lstQuyen)   //duyệt list quyền
                     {
                         Quyen += item.Quyen.MaQuyen + ",";
@@ -137,7 +155,7 @@ namespace WebsiteBanHang.Controllers
             return View();
         }
 
-        public void PhanQuyen(string Taikhoan, string Quyen)
+        private void PhanQuyen(string Taikhoan, string Quyen)
         {
             FormsAuthentication.Initialize();
 
@@ -148,7 +166,12 @@ namespace WebsiteBanHang.Controllers
                                             false,  //ko lưu
                                             Quyen,  //Lấy chuỗi phân quyền
                                             FormsAuthentication.FormsCookiePath);   //Lấy đg dẫn cookie thay vì name
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));  //tạo cookie(tự tạo name, mã hóa thông tin ticket add vào cookie)
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket))
+            {
+                HttpOnly = true,
+                Secure = Request.IsSecureConnection,
+                Path = FormsAuthentication.FormsCookiePath
+            };
             if (ticket.IsPersistent) cookie.Expires = ticket.Expiration;    //ktra cookie có chưa
             Response.Cookies.Add(cookie);     //
         }
@@ -156,12 +179,8 @@ namespace WebsiteBanHang.Controllers
         //Giải phóng dung lượng biến db, để ở cuối controller
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                if (db != null)
-                    db.Dispose();
+            if (disposing && db != null)
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

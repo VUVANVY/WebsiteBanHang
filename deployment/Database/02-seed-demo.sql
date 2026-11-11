@@ -1,0 +1,86 @@
+-- Generated offline by tools/Export-DemoDatabase.ps1 from QuanLyBanHangModel.edmx.
+-- Contains no database export, account, password, customer, order or comment data.
+-- Select a NEW dedicated demo database in your SQL client before running this file.
+SET ANSI_NULLS ON;
+SET QUOTED_IDENTIFIER ON;
+SET NOCOUNT ON;
+SET XACT_ABORT ON;
+IF DB_NAME() IN (N'master', N'model', N'msdb', N'tempdb') THROW 51000, 'Select a dedicated demo database first.', 1;
+-- Run 01-schema.sql first. Refuses to mix this seed with any existing mapped application data.
+IF OBJECT_ID(N'[dbo].[BinhLuan]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[BinhLuan]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[ChiTietDonDatHang]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[ChiTietDonDatHang]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[ChiTietPhieuNhap]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[ChiTietPhieuNhap]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[DonDatHang]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[DonDatHang]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[KhachHang]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[KhachHang]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[LoaiSanPham]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[LoaiSanPham]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[LoaiThanhVien]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[LoaiThanhVien]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[LoaiThanhVien_Quyen]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[LoaiThanhVien_Quyen]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[NhaCungCap]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[NhaCungCap]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[NhaSanXuat]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[NhaSanXuat]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[PhieuNhap]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[PhieuNhap]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[Quyen]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[Quyen]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[SanPham]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[SanPham]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[sysdiagrams]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[sysdiagrams]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+IF OBJECT_ID(N'[dbo].[ThanhVien]', N'U') IS NULL THROW 51002, 'Run 01-schema.sql in this database first.', 1;
+IF EXISTS (SELECT 1 FROM [dbo].[ThanhVien]) THROW 51003, 'Demo seed requires empty application tables; no existing data is modified.', 1;
+BEGIN TRY
+BEGIN TRANSACTION;
+SET IDENTITY_INSERT [dbo].[LoaiSanPham] ON;
+INSERT INTO [dbo].[LoaiSanPham] ([MaLoaiSP], [TenLoai], [Icon], [BiDanh]) VALUES (1, N'Xe số', N'fas fa-motorcycle', N'xe-so');
+INSERT INTO [dbo].[LoaiSanPham] ([MaLoaiSP], [TenLoai], [Icon], [BiDanh]) VALUES (2, N'Xe tay ga', N'fas fa-motorcycle', N'xe-tay-ga');
+INSERT INTO [dbo].[LoaiSanPham] ([MaLoaiSP], [TenLoai], [Icon], [BiDanh]) VALUES (7, N'Xe tay côn', N'fas fa-motorcycle', N'xe-tay-con');
+SET IDENTITY_INSERT [dbo].[LoaiSanPham] OFF;
+SET IDENTITY_INSERT [dbo].[LoaiThanhVien] ON;
+INSERT INTO [dbo].[LoaiThanhVien] ([MaLoaiTV], [TenLoai], [UuDai]) VALUES (1, N'Quản trị website', 0);
+INSERT INTO [dbo].[LoaiThanhVien] ([MaLoaiTV], [TenLoai], [UuDai]) VALUES (2, N'Quản lý', 0);
+INSERT INTO [dbo].[LoaiThanhVien] ([MaLoaiTV], [TenLoai], [UuDai]) VALUES (3, N'Khách hàng', 0);
+SET IDENTITY_INSERT [dbo].[LoaiThanhVien] OFF;
+SET IDENTITY_INSERT [dbo].[NhaCungCap] ON;
+INSERT INTO [dbo].[NhaCungCap] ([MaNCC], [TenNCC], [DiaChi], [Email], [SoDienThoai], [Fax]) VALUES (1, N'Nhà cung cấp demo', NULL, NULL, NULL, NULL);
+SET IDENTITY_INSERT [dbo].[NhaCungCap] OFF;
+SET IDENTITY_INSERT [dbo].[NhaSanXuat] ON;
+INSERT INTO [dbo].[NhaSanXuat] ([MaNSX], [TenNSX], [ThongTin]) VALUES (1, N'Hãng demo A', N'Thông tin minh họa cho bản demo CV.');
+INSERT INTO [dbo].[NhaSanXuat] ([MaNSX], [TenNSX], [ThongTin]) VALUES (2, N'Hãng demo B', N'Thông tin minh họa cho bản demo CV.');
+INSERT INTO [dbo].[NhaSanXuat] ([MaNSX], [TenNSX], [ThongTin]) VALUES (3, N'Hãng demo C', N'Thông tin minh họa cho bản demo CV.');
+SET IDENTITY_INSERT [dbo].[NhaSanXuat] OFF;
+INSERT INTO [dbo].[Quyen] ([MaQuyen], [TenQuyen]) VALUES (N'QuanTriWeb', N'Quản trị website');
+INSERT INTO [dbo].[Quyen] ([MaQuyen], [TenQuyen]) VALUES (N'QuanLy', N'Quản lý');
+INSERT INTO [dbo].[Quyen] ([MaQuyen], [TenQuyen]) VALUES (N'KhachHang', N'Khách hàng');
+INSERT INTO [dbo].[LoaiThanhVien_Quyen] ([MaLoaiTV], [MaQuyen], [GhiChu]) VALUES (1, N'QuanTriWeb', N'Cấu hình quyền demo');
+INSERT INTO [dbo].[LoaiThanhVien_Quyen] ([MaLoaiTV], [MaQuyen], [GhiChu]) VALUES (2, N'QuanLy', N'Cấu hình quyền demo');
+INSERT INTO [dbo].[LoaiThanhVien_Quyen] ([MaLoaiTV], [MaQuyen], [GhiChu]) VALUES (3, N'KhachHang', N'Cấu hình quyền demo');
+SET IDENTITY_INSERT [dbo].[SanPham] ON;
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (1, N'[DEMO] Xe số 01', 21500000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download.jpg', 10, 0, 0, 0, 0, 1, 1, 1, 1, 0, N'download.jpg', N'download.jpg', N'download.jpg', N'download.jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (2, N'[DEMO] Xe số 02', 25000000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (1).jpg', 10, 0, 0, 0, 0, 1, 1, 2, 1, 0, N'download (1).jpg', N'download (1).jpg', N'download (1).jpg', N'download (1).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (3, N'[DEMO] Xe số 03', 28500000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (2).jpg', 10, 0, 0, 0, 0, 1, 1, 3, 1, 0, N'download (2).jpg', N'download (2).jpg', N'download (2).jpg', N'download (2).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (4, N'[DEMO] Xe số 04', 32000000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (3).jpg', 10, 0, 0, 0, 0, 1, 1, 1, 1, 0, N'download (3).jpg', N'download (3).jpg', N'download (3).jpg', N'download (3).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (5, N'[DEMO] Xe tay ga 05', 35500000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (4).jpg', 10, 0, 0, 0, 0, 1, 1, 2, 2, 0, N'download (4).jpg', N'download (4).jpg', N'download (4).jpg', N'download (4).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (6, N'[DEMO] Xe tay ga 06', 39000000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (5).jpg', 10, 0, 0, 0, 0, 1, 1, 3, 2, 0, N'download (5).jpg', N'download (5).jpg', N'download (5).jpg', N'download (5).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (7, N'[DEMO] Xe tay ga 07', 42500000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (8).jpg', 10, 0, 0, 0, 0, 1, 1, 1, 2, 0, N'download (8).jpg', N'download (8).jpg', N'download (8).jpg', N'download (8).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (8, N'[DEMO] Xe tay ga 08', 46000000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (9).jpg', 10, 0, 0, 0, 0, 1, 1, 2, 2, 0, N'download (9).jpg', N'download (9).jpg', N'download (9).jpg', N'download (9).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (9, N'[DEMO] Xe tay côn 09', 49500000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (10).jpg', 10, 0, 0, 0, 0, 1, 1, 3, 7, 0, N'download (10).jpg', N'download (10).jpg', N'download (10).jpg', N'download (10).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (10, N'[DEMO] Xe tay côn 10', 53000000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (11).jpg', 10, 0, 0, 0, 0, 1, 1, 1, 7, 0, N'download (11).jpg', N'download (11).jpg', N'download (11).jpg', N'download (11).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (11, N'[DEMO] Xe tay côn 11', 56500000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (12).jpg', 10, 0, 0, 0, 0, 1, 1, 2, 7, 0, N'download (12).jpg', N'download (12).jpg', N'download (12).jpg', N'download (12).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (12, N'[DEMO] Xe tay côn 12', 60000000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'download (13).jpg', 10, 0, 0, 0, 0, 1, 1, 3, 7, 0, N'download (13).jpg', N'download (13).jpg', N'download (13).jpg', N'download (13).jpg');
+INSERT INTO [dbo].[SanPham] ([MaSP], [TenSP], [DonGia], [NgayCapNhat], [DongCo], [MoTa], [HinhAnh], [SoLuongTon], [LuotXem], [LuotBinhChon], [LuotBinhLuan], [SoLuotMua], [Moi], [MaNCC], [MaNSX], [MaLoaiSP], [DaXoa], [HinhAnh1], [HinhAnh2], [HinhAnh3], [HinhAnh4]) VALUES (13, N'[DEMO] Xe tay côn 13', 63500000, CONVERT(datetime, N'2026-01-01T00:00:00', 126), N'Thông số minh họa cho bản demo CV.', N'<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>', N'xe-may-honda-winner-x-phien-ban-the-thao-phanh-thuong296.jpg', 10, 0, 0, 0, 0, 1, 1, 1, 7, 0, N'xe-may-honda-winner-x-phien-ban-the-thao-phanh-thuong296.jpg', N'xe-may-honda-winner-x-phien-ban-the-thao-phanh-thuong296.jpg', N'xe-may-honda-winner-x-phien-ban-the-thao-phanh-thuong296.jpg', N'xe-may-honda-winner-x-phien-ban-the-thao-phanh-thuong296.jpg');
+SET IDENTITY_INSERT [dbo].[SanPham] OFF;
+COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
+THROW;
+END CATCH;

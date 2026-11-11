@@ -1,4 +1,4 @@
-﻿@model WebsiteBanHang.Models.DonDatHang
+@model WebsiteBanHang.Models.DonDatHang
 @{
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Layout/HomeLayout.cshtml";
@@ -108,12 +108,20 @@
 
             <div class="mt-4 text-end">
 
-                @if (Model.DaThanhToan == false)
+                @if (Model.DaThanhToan != true && Model.DaHuy != true)
                 {
-                    <a href="@Url.Action("ThanhToan", new { id = Model.MaDDH })"
-                       class="btn btn-success rounded-pill px-4">
-                        <i class="fas fa-credit-card me-2"></i> Thanh toán
-                    </a>
+                    using (Html.BeginForm("ThanhToan", "DonHang", new { id = Model.MaDDH }, FormMethod.Post, new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success rounded-pill px-4">
+                            <i class="fas fa-credit-card me-2"></i> Thanh toán
+                        </button>
+                    }
+                    using (Html.BeginForm("HuyDon", "DonHang", new { id = Model.MaDDH }, FormMethod.Post, new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger rounded-pill px-4">Hủy đơn</button>
+                    }
                 }
             <a href="@Url.Action("XuatHoaDon", "DonHang", new { id = Model.MaDDH })"
                class="btn btn-outline-primary rounded-pill px-4">

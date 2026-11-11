@@ -1,0 +1,20 @@
+-- Read-only checks for the fresh synthetic demo, before creating any administrator account.
+SET NOCOUNT ON;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[BinhLuan]) <> 0 THROW 51004, 'Unexpected demo row count in BinhLuan.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[ChiTietDonDatHang]) <> 0 THROW 51004, 'Unexpected demo row count in ChiTietDonDatHang.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[ChiTietPhieuNhap]) <> 0 THROW 51004, 'Unexpected demo row count in ChiTietPhieuNhap.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[DonDatHang]) <> 0 THROW 51004, 'Unexpected demo row count in DonDatHang.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[KhachHang]) <> 0 THROW 51004, 'Unexpected demo row count in KhachHang.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[LoaiSanPham]) <> 3 THROW 51004, 'Unexpected demo row count in LoaiSanPham.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[LoaiThanhVien]) <> 3 THROW 51004, 'Unexpected demo row count in LoaiThanhVien.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[LoaiThanhVien_Quyen]) <> 3 THROW 51004, 'Unexpected demo row count in LoaiThanhVien_Quyen.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[NhaCungCap]) <> 1 THROW 51004, 'Unexpected demo row count in NhaCungCap.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[NhaSanXuat]) <> 3 THROW 51004, 'Unexpected demo row count in NhaSanXuat.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[PhieuNhap]) <> 0 THROW 51004, 'Unexpected demo row count in PhieuNhap.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[Quyen]) <> 3 THROW 51004, 'Unexpected demo row count in Quyen.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[SanPham]) <> 13 THROW 51004, 'Unexpected demo row count in SanPham.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[sysdiagrams]) <> 0 THROW 51004, 'Unexpected demo row count in sysdiagrams.', 1;
+IF (SELECT COUNT_BIG(*) FROM [dbo].[ThanhVien]) <> 0 THROW 51004, 'Unexpected demo row count in ThanhVien.', 1;
+IF (SELECT COUNT(*) FROM sys.foreign_keys WHERE schema_id = SCHEMA_ID(N'dbo')) <> 15 THROW 51005, 'Unexpected foreign-key count.', 1;
+IF EXISTS (SELECT 1 FROM sys.foreign_keys WHERE schema_id = SCHEMA_ID(N'dbo') AND (is_disabled = 1 OR is_not_trusted = 1)) THROW 51006, 'A foreign key is disabled or untrusted.', 1;
+SELECT N'Demo schema and synthetic row counts verified.' AS Result;

@@ -19,11 +19,17 @@ Website bán hàng sử dụng ASP.NET MVC 5, C#, .NET Framework 4.7.2 và Entit
 
 1. Mở `WebsiteBanHang.sln` bằng Visual Studio.
 2. Nhấp phải vào solution, chọn **Restore NuGet Packages** để tải các thư viện trong `packages.config`.
-3. Chuẩn bị cơ sở dữ liệu SQL Server `QuanLyBanHang` với cấu trúc phù hợp mô hình `WebsiteBanHang/Models/QuanLyBanHangModel.edmx`.
+3. Tạo database SQL Server `QuanLyBanHang` trống, chạy lần lượt các script trong `deployment/Database/` theo [hướng dẫn database demo](deployment/README-database.md).
 4. Sửa connection string `QuanLyBanHangEntities` trong `WebsiteBanHang/Web.config` cho phù hợp máy của bạn. Cấu hình hiện tại kết nối tới `VUVANVY\SQLEXPRESS` bằng Windows Authentication.
 5. Đặt `WebsiteBanHang` làm startup project, build solution rồi nhấn **F5** để chạy với IIS Express.
 
-Dự án hiện chưa kèm script SQL hoặc bản sao lưu cơ sở dữ liệu. Cần chuẩn bị cơ sở dữ liệu trước khi sử dụng các chức năng truy cập dữ liệu.
+Các script đi kèm tạo cấu trúc và sản phẩm giả định cho bản demo. Không có dữ liệu tài khoản, khách hàng hoặc đơn hàng cá nhân. Chỉ chạy trên database demo mới, không chạy trên database đang sử dụng.
+
+## Triển khai website để gắn CV
+
+Xem [hướng dẫn triển khai hosting Windows](deployment/README.md). Dự án có profile publish Release và công cụ tạo gói trong `tools/Publish-Website.ps1`. Cấu hình hosting thật được điền vào thư mục `artifacts/` được bỏ qua trong Git.
+
+Tài khoản mới dùng mật khẩu được băm có salt; đăng nhập hợp lệ sẽ nâng cấp mật khẩu cũ nếu có. Các thao tác đơn hàng kiểm tra chủ sở hữu và dùng POST kèm token chống CSRF. Bản Release yêu cầu HTTPS cho cookie đăng nhập.
 
 ## Cấu trúc
 

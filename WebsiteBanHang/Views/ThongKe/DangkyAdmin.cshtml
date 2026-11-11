@@ -24,7 +24,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.MatKhau, new { @class = "col-md-2 control-label" })
                 <div class="col-md-10">
-                    @Html.TextBoxFor(model => model.MatKhau, new { @class = "form-control" })
+                    @Html.PasswordFor(model => model.MatKhau, new { @class = "form-control", autocomplete = "new-password" })
                     @Html.ValidationMessageFor(model => model.MatKhau, "", new { @style = "margin-bottom:15px; color:#DC143C;" })
                 </div>
             </div>

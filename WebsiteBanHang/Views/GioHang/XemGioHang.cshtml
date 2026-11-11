@@ -1,4 +1,4 @@
-﻿@using WebsiteBanHang.Models
+@using WebsiteBanHang.Models
 @model List<ItemGioHang>
 
 @{
@@ -6,7 +6,12 @@
     Layout = "~/Views/Layout/RegisterLayout.cshtml";
 }
 
-@if (Model == null && Model.Count == 0) //nếu list giỏ hàng rỗng thì xuất thông báo
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="container pt-3"><div class="alert alert-warning" role="alert">@TempData["ErrorMessage"]</div></div>
+}
+
+@if (Model == null || Model.Count == 0)
 {
     <h1 style="color:crimson">Giỏ hàng rỗng</h1>
 }
@@ -28,41 +33,18 @@ else
 
         @using (Html.BeginForm("DatHang", "GioHang", FormMethod.Post, new { @id = "myform" }))
         {
+            @Html.AntiForgeryToken()
             <div class="row g-4">
                 <!-- Cột trái: Danh sách sản phẩm + Thông tin khách hàng -->
                 <div class="col-lg-8">
                     
-                    <!-- Form thông tin khách hàng (nếu chưa đăng nhập) -->
                     @if (Session["TaiKhoan"] == null)
                     {
-                        <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
-                            <div class="card-header bg-white border-bottom py-3 px-4">
-                                <h5 class="mb-0 fw-700 text-dark"><i class="fas fa-user-edit me-2 text-secondary"></i>Thông tin mua hàng</h5>
-                            </div>
-                            <div class="card-body p-4 text-start">
-                                @Html.Hidden("MaThanhVien", 1)
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-uppercase opacity-75">Tên khách hàng</label>
-                                        @Html.TextBox("TenKH", null, new { @class = "form-control rounded-3", placeholder = "Nhập họ tên của bạn", required = "required" })
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold text-uppercase opacity-75">Số điện thoại</label>
-                                        @Html.TextBox("SoDienThoai", null, new { @class = "form-control rounded-3", placeholder = "0xxx xxx xxx", required = "required" })
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label class="form-label small fw-bold text-uppercase opacity-75">Email nhận tin (không bắt buộc)</label>
-                                        @Html.TextBox("Email", null, new { @class = "form-control rounded-3", placeholder = "example@gmail.com" })
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label class="form-label small fw-bold text-uppercase opacity-75">Địa chỉ giao xe</label>
-                                        @Html.TextArea("DiaChi", null, new { @class = "form-control rounded-3", rows = "2", placeholder = "Số nhà, tên đường, phường/xã..." })
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="alert alert-info">
+                            Vui lòng đăng nhập từ trang chủ trước khi xác nhận đặt hàng.
+                            <a href="@Url.Action("Index", "Home")" class="alert-link">Về trang chủ</a>
                         </div>
                     }
-
                     <!-- Danh sách sản phẩm -->
                     <div class="cart-items-wrapper">
                         @foreach (var item in Model)
@@ -97,9 +79,9 @@ else
                                                         <a href="@Url.Action("SuaGioHang", new { @MaSP = item.MaSP })" class="btn btn-sm btn-light rounded-circle p-2" title="Sửa">
                                                             <i class="fas fa-edit text-primary"></i>
                                                         </a>
-                                                        <a href="@Url.Action("XoaGioHang", new { @MaSP = item.MaSP })" class="btn btn-sm btn-light rounded-circle p-2" title="Xóa">
+                                                        <button type="submit" formaction="@Url.Action("XoaGioHang", new { MaSP = item.MaSP })" formmethod="post" formnovalidate class="btn btn-sm btn-light rounded-circle p-2" title="Xóa">
                                                             <i class="fas fa-times text-danger"></i>
-                                                        </a>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -135,7 +117,7 @@ else
                                     </div>
                                 </div>
 
-                                <button type="button" onclick="document.forms['myform'].submit();" class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm mb-3">
+                                <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 shadow-sm mb-3">
                                     XÁC NHẬN ĐẶT HÀNG <i class="fas fa-arrow-right ms-2"></i>
                                 </button>
                                 
@@ -170,5 +152,3 @@ else
     .smaller { font-size: 0.75rem; }
 </style>
 }
-
-

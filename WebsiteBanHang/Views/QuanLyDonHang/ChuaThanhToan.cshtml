@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WebsiteBanHang.Models.DonDatHang>
+@model IEnumerable<WebsiteBanHang.Models.DonDatHang>
 @{
     ViewBag.Title = "Quản lý đơn hàng";
     Layout = "~/Views/Layout/AdminLayout.cshtml";
@@ -134,10 +134,16 @@
                                             <i class="fas fa-eye"></i>
                                         </a>
 
-                                        <a href="@Url.Action("HuyDon", new { id = item.MaDDH })"
-                                           class="btn btn-sm btn-outline-danger">
-                                            <i class="fas fa-times"></i>
-                                        </a>
+                                        @if (item.DaHuy != true && item.TinhTrangGiaoHang != true)
+                                        {
+                                            using (Html.BeginForm("HuyDon", "QuanLyDonHang", new { id = item.MaDDH }, FormMethod.Post, new { @class = "d-inline" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hủy đơn">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            }
+                                        }
                                     </td>
 
                                 </tr>

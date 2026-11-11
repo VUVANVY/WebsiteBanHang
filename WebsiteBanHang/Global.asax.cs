@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
+using System.Security.Cryptography;
+using System.Threading;
 
 namespace WebsiteBanHang
 {
@@ -46,14 +48,39 @@ namespace WebsiteBanHang
 
         protected void Application_AuthenticateRequest(Object sender, EventArgs e)
         {
-            var TaiKhoanCookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName];  //truy vấn lấy cookie
-            if(TaiKhoanCookie != null)  //ktra cookie dang nhap r
+            var cookie = Context.Request.Cookies[FormsAuthentication.FormsCookieName];
+            if (cookie == null || string.IsNullOrEmpty(cookie.Value))
+                return;
+
+            FormsAuthenticationTicket ticket;
+            try
             {
-                var authTicket = FormsAuthentication.Decrypt(TaiKhoanCookie.Value);     //decrypt cookie để lấy quyền
-                var roles = authTicket.UserData.Split(new Char[] { ',' });      //lấy từng quyền
-                var userPrincipal = new GenericPrincipal(new GenericIdentity(authTicket.Name), roles);  //gán role vào
-                Context.User = userPrincipal;
+                ticket = FormsAuthentication.Decrypt(cookie.Value);
             }
+            catch (Exception ex) when (ex is ArgumentException || ex is CryptographicException || ex is HttpException)
+            {
+                RejectAuthenticationCookie();
+                return;
+            }
+
+            if (ticket == null || ticket.Expired || string.IsNullOrWhiteSpace(ticket.Name))
+            {
+                RejectAuthenticationCookie();
+                return;
+            }
+
+            var roles = (ticket.UserData ?? string.Empty).Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            var principal = new GenericPrincipal(new GenericIdentity(ticket.Name, "Forms"), roles);
+            Context.User = principal;
+            Thread.CurrentPrincipal = principal;
+        }
+
+        private void RejectAuthenticationCookie()
+        {
+            FormsAuthentication.SignOut();
+            var anonymous = new GenericPrincipal(new GenericIdentity(string.Empty), new string[0]);
+            Context.User = anonymous;
+            Thread.CurrentPrincipal = anonymous;
         }
     }
 }

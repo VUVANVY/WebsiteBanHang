@@ -89,6 +89,7 @@
                 <div class="modal-body">
                     @using (Ajax.BeginForm("DangNhap", "Home", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "ThongBao2" }))
                     {
+                        @Html.AntiForgeryToken()
                         <div class="mb-3">
                             <label class="form-label">Tên đăng nhập</label>
                             <input type="text" class="form-control" name="txtTenDangNhap" placeholder="Nhập tên đăng nhập" required />
@@ -241,11 +242,12 @@
             e.preventDefault();
 
             var id = btn.getAttribute("data-id");
+            var token = document.querySelector('#loginModal2 input[name="__RequestVerificationToken"]').value;
 
             fetch("/GioHang/ThemGioHangAjax", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ MaSP: id })
+                headers: { "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8" },
+                body: "MaSP=" + encodeURIComponent(id) + "&__RequestVerificationToken=" + encodeURIComponent(token)
             })
                 .then(res => res.json())
                 .then(data => {

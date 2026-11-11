@@ -8,12 +8,15 @@
                 {
                     ThanhVien tv = (ThanhVien)Session["TaiKhoan"];
                     <li class="mr-3">Xin chào @tv.HoTen</li>
+                    if (User.IsInRole("QuanTriWeb"))
+                    {
+                        <li class="mr-3"><a href="@Url.Action("DangkyAdmin", "ThongKe")">Tạo tài khoản quản lý</a></li>
+                    }
                     <li>@*@Html.ActionLink("Đăng xuất", "DangXuatAdmin", "ThongKe", new { @class = "lock" })*@ <a class="lock" href="@Url.Action("DangXuatAdmin","ThongKe")">Đăng xuất</a> </li>
                 }
                 else
                 {
                     <li style="display:inline; margin-right:1em;" class="btn btn-primary"><a id="btnDangNhap" class="lock" style="text-decoration:none;color:white;" href="#">Đăng nhập</a></li>
-                    <li style="display:inline; margin-right:1em;" class="btn btn-success"><a class="lock" style="text-decoration:none;color:white;" href="@Url.Action("DangKyAdmin", "ThongKe")">Đăng ký</a></li>
                 }
             </ul>
         </li>
@@ -36,14 +39,13 @@
                 <!--Dùng ajax để hiển thị thông báo khi đăng nhập-->
                 @using (Ajax.BeginForm("DangNhapAdmin", "ThongKe", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "ThongBao" }))
                 {
-
+                    @Html.AntiForgeryToken()
                     <input type="text" class="email" name="txtTenDangNhap" placeholder="Tên đăng nhập" required="" />
                     <input type="password" class="password" name="txtMatKhau" placeholder="Mật khẩu" required="" />
                     <p><a href="#">Quên mật khẩu?</a></p>
                     <h3 id="ThongBao" style="font-weight:bold; color:crimson; text-align:left"></h3>
                     <ul class="login-buttons">
                         <li><input class="btn-summit" type="submit" value="Đăng nhập" style="height: 51px; width: 199px;" /></li>
-                        <li><a href="#" class="btn-summit hvr-sweep-to-left" style="min-width: 150px; height: 47px; font-size: 16px; text-decoration:none">đăng ký</a></li>
                     </ul>
                 }
             </div>

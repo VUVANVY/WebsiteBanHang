@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using WebsiteBanHang.Models;
@@ -70,28 +70,49 @@ public ActionResult DaGiaoDaThanhToan()
         }
 
         // Giao hàng
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult GiaoHang(int id)
         {
             var don = db.DonDatHang.Find(id);
             if (don == null) return HttpNotFound();
 
-            don.TinhTrangGiaoHang = true;
-            don.NgayGiao = DateTime.Now;
-            db.SaveChanges();
+            if (don.DaHuy == true || don.DaXoa == true || don.DaThanhToan != true)
+                return new HttpStatusCodeResult(409, "Chi giao don hop le da thanh toan.");
+            if (don.TinhTrangGiaoHang != true)
+            {
+                don.TinhTrangGiaoHang = true;
+                don.NgayGiao = DateTime.Now;
+                db.SaveChanges();
+            }
 
             return RedirectToAction("ChuaGiao");
         }
 
         // Hủy đơn
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult HuyDon(int id)
         {
             var don = db.DonDatHang.Find(id);
             if (don == null) return HttpNotFound();
 
-            don.DaHuy = true;
-            db.SaveChanges();
+            if (don.TinhTrangGiaoHang == true)
+                return new HttpStatusCodeResult(409, "Khong huy don da giao.");
+            if (don.DaHuy != true)
+            {
+                don.DaHuy = true;
+                db.SaveChanges();
+            }
 
             return RedirectToAction("ChuaThanhToan");
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using WebsiteBanHang.Models;
 
@@ -9,302 +9,229 @@ namespace WebsiteBanHang.Controllers
 {
     public class GioHangController : Controller
     {
-        QuanLyBanHangEntities db = new QuanLyBanHangEntities();
+        private readonly QuanLyBanHangEntities db = new QuanLyBanHangEntities();
 
-        //Hiển thị icon giỏ hàng lên phần header
+        [ChildActionOnly]
         public ActionResult GioHangPartial()
         {
-            if (TinhTongSoLuong() == 0) //ktra soluong giỏ hàng
-            {
-                ViewBag.TongSoLuong = 0;
-                ViewBag.TongTien = 0;
-                return PartialView();
-            }
-            //Hiển thị tổng tiền và sl sp lên trên icon giỏ hàng
-            ViewBag.TongSoLuong = TinhTongSoLuong();
-            ViewBag.TongTien = TinhTongTien();
-
+            var cart = LayGioHang();
+            ViewBag.TongSoLuong = cart.Sum(item => item.SoLuong);
+            ViewBag.TongTien = cart.Sum(item => item.ThanhTien);
             return PartialView();
         }
 
-        //Thêm giỏ hàng thông thường ko ajax
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ThemGioHang(int MaSP, string strURL)
         {
-            //ktra sp có tồn tại trong csdl ko
-            SanPham sp = db.SanPham.SingleOrDefault(n => n.MaSP == MaSP);  //lấy sp với masp tương ứng
-            if(sp == null)  //nếu lấy sai masp
-            {
-                //Trang đường dẫn ko hợp lệ
-                Response.StatusCode = 404;
-                return null;
-            }
-
-            //Lấy giỏ hàng
-            List<ItemGioHang> lstGioHang = LayGioHang();
-
-            //trường hợp nếu 1 sp đã tồn tại trong giỏ hàng
-            ItemGioHang spCheck = lstGioHang.SingleOrDefault(n => n.MaSP == MaSP);  //ktra sp có trong lst đã tạo hay ko
-            if(spCheck != null)
-            {
-                //ktra số lg tồn trc khi cho kh mua hàng
-                if (sp.SoLuongTon < spCheck.SoLuong)
-                    return View("ThongBao");
-                //nếu sp đã có trong list thì khi thêm vào giỏ hàng sẽ tăng số lượng lên
-                spCheck.SoLuong++;
-                //và đơn giá sẽ tăng theo giá sp * sl tương ứng
-                spCheck.ThanhTien = spCheck.SoLuong * spCheck.DonGia;
-                TempData["SuccessMessage"] = "Thêm vào giỏ hàng thành công!";
-                return Redirect(strURL);
-            }
-            
-            //nếu chưa tồn tại thì thêm vào list
-            ItemGioHang itemGH = new ItemGioHang(MaSP);
-            if (sp.SoLuongTon < itemGH.SoLuong) //ktra số lg tồn trc khi cho kh mua hàng
-                return View("ThongBao");
-            lstGioHang.Add(itemGH);
+            var message = AddProduct(MaSP);
+            if (message != null)
+                return CartError(message);
             TempData["SuccessMessage"] = "Thêm vào giỏ hàng thành công!";
-            return Redirect(strURL);
+            return Url.IsLocalUrl(strURL) ? (ActionResult)Redirect(strURL) : RedirectToAction("XemGioHang");
         }
 
         [HttpPost]
-public JsonResult ThemGioHangAjax(int MaSP)
-{
-    SanPham sp = db.SanPham.SingleOrDefault(n => n.MaSP == MaSP);
-    if (sp == null)
-        return Json(new { success = false });
-
-    List<ItemGioHang> lstGioHang = LayGioHang();
-
-    ItemGioHang spCheck = lstGioHang.SingleOrDefault(n => n.MaSP == MaSP);
-
-    if (spCheck != null)
-    {
-        spCheck.SoLuong++;
-        spCheck.ThanhTien = spCheck.SoLuong * spCheck.DonGia;
-    }
-    else
-    {
-        ItemGioHang itemGH = new ItemGioHang(MaSP);
-        lstGioHang.Add(itemGH);
-    }
-
-    // 🔥 Tính tổng số lượng
-    int tongSoLuong = lstGioHang.Sum(x => x.SoLuong);
-
-    return Json(new { success = true, total = tongSoLuong });
-}
-
-        // GET: GioHang
-        //Trang xem giỏ hàng
-        public ActionResult XemGioHang()
+        [ValidateAntiForgeryToken]
+        public JsonResult ThemGioHangAjax(int MaSP)
         {
-            //lấy giỏ hàng đã đc tạo
-            List<ItemGioHang> lstGioHang = LayGioHang();
-            ViewBag.TongSoLuong = TinhTongSoLuong();
-            ViewBag.TongTien = TinhTongTien();
-
-            return View(lstGioHang);    //đưa list vào view
+            var message = AddProduct(MaSP);
+            if (message != null)
+            {
+                Response.StatusCode = 409;
+                Response.TrySkipIisCustomErrors = true;
+                return Json(new { success = false, message });
+            }
+            return Json(new { success = true, total = LayGioHang().Sum(item => item.SoLuong) });
         }
 
-        //chỉnh sửa giỏ hàng
+        [HttpGet]
+        public ActionResult XemGioHang()
+        {
+            var cart = LayGioHang();
+            ViewBag.TongSoLuong = cart.Sum(item => item.SoLuong);
+            ViewBag.TongTien = cart.Sum(item => item.ThanhTien);
+            return View(cart);
+        }
+
         [HttpGet]
         public ActionResult SuaGioHang(int MaSP)
         {
-            //ktra session giỏ hàng có tồn tại ko
-            if(Session["GioHang"] == null)
-            {
-                return RedirectToAction("Index", "Home");   //quay về trang chủ
-            }
-            //ktra sp có tồn tại trong csdl ko
-            SanPham sp = db.SanPham.SingleOrDefault(n => n.MaSP == MaSP);
-            if (sp == null)
-            {
-                //Trang đường dẫn ko hợp lệ
-                Response.StatusCode = 404;
-                return null;
-            }
-
-            //Lấy list giỏ hàng từ session
-            List<ItemGioHang> lstGioHang = LayGioHang();
-
-            //ktra xem sp đó có tồn tại trong giỏ hàng hay ko
-            ItemGioHang spCheck = lstGioHang.SingleOrDefault(n => n.MaSP == MaSP);
-            if(spCheck == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            //Lấy list giỏ hàng tạo giao diện
-            ViewBag.GioHang = lstGioHang;
-
-            //nếu tồn tại thì
-            return View(spCheck);
+            var cart = LayGioHang();
+            var item = cart.SingleOrDefault(product => product.MaSP == MaSP);
+            if (item == null)
+                return HttpNotFound();
+            ViewBag.GioHang = cart;
+            return View(item);
         }
 
-        //Cập nhật giỏ hàng
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult CapNhatGioHang(ItemGioHang itemGH)
         {
-            //ktra số lượng tồn sau khi sửa
-            SanPham spCheck = db.SanPham.Single(n => n.MaSP == itemGH.MaSP);
-            if(spCheck.SoLuongTon < itemGH.SoLuong)
-            {
-                return View("ThongBao");
-            }
-
-            //update số lg trong session giỏ hàng
-            //bc1: Lấy list giỏ hàng từ sesssion giỏ hàng
-            List<ItemGioHang> lstGH = LayGioHang();
-            //bc2: lấy sp cần update từ trong list giỏ hàng
-            ItemGioHang itemGHUpdate = lstGH.Find(n => n.MaSP == itemGH.MaSP);  //pt find dùng để tìm các trường mong muốn
-            //bc3: update lại số lg và thành tiền
-            itemGHUpdate.SoLuong = itemGH.SoLuong;
-            itemGHUpdate.ThanhTien = itemGHUpdate.SoLuong * itemGHUpdate.DonGia;
-
+            if (!ModelState.IsValid || itemGH == null || itemGH.SoLuong < 1)
+                return CartError("Số lượng sản phẩm phải là số nguyên lớn hơn 0.");
+            var item = LayGioHang().SingleOrDefault(product => product.MaSP == itemGH.MaSP);
+            if (item == null)
+                return HttpNotFound();
+            var productInStore = db.SanPham.SingleOrDefault(product => product.MaSP == itemGH.MaSP && product.DaXoa != true);
+            if (!CanOrder(productInStore, itemGH.SoLuong))
+                return CartError("Sản phẩm không còn bán hoặc số lượng yêu cầu vượt quá tồn kho.");
+            UpdateItem(item, productInStore, itemGH.SoLuong);
             return RedirectToAction("XemGioHang");
         }
 
-        //Xóa giỏ hàng
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult XoaGioHang(int MaSP)
         {
-            //ktra session giỏ hàng có tồn tại ko
-            if (Session["GioHang"] == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            //ktra sp có tồn tại trong csdl ko
-            SanPham sp = db.SanPham.SingleOrDefault(n => n.MaSP == MaSP);
-            if (sp == null)
-            {
-                //Trang đường dẫn ko hợp lệ
-                Response.StatusCode = 404;
-                return null;
-            }
-            //Lấy list giỏ hàng từ session
-            List<ItemGioHang> lstGioHang = LayGioHang();
-            //ktra xem sp đó có tồn tại trong giỏ hàng hay ko
-            ItemGioHang spCheck = lstGioHang.SingleOrDefault(n => n.MaSP == MaSP);
-            if (spCheck == null)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            //Xóa item trong giỏ hàng
-            lstGioHang.Remove(spCheck);
-
+            var cart = LayGioHang();
+            var item = cart.SingleOrDefault(product => product.MaSP == MaSP);
+            if (item != null)
+                cart.Remove(item);
             return RedirectToAction("XemGioHang");
         }
 
-        //chức năng đặt hàng
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult DatHang()
         {
-            if (Session["TaiKhoan"] == null)
-                return RedirectToAction("DangNhap", "ThanhVien");
-
-            ThanhVien tv = (ThanhVien)Session["TaiKhoan"];
-
-            // 🔥 TÌM KHÁCH HÀNG TƯƠNG ỨNG
-            KhachHang khach = db.KhachHang
-                .FirstOrDefault(x => x.MaThanhVien == tv.MaThanhVien);
-
-            // Nếu chưa có → tạo mới
-            if (khach == null)
+            var sessionMember = Session["TaiKhoan"] as ThanhVien;
+            if (sessionMember == null || !User.Identity.IsAuthenticated
+                || !string.Equals(User.Identity.Name, sessionMember.TaiKhoan, StringComparison.OrdinalIgnoreCase))
+                return RedirectToAction("Index", "Home");
+            var cart = LayGioHang();
+            if (cart.Count == 0 || cart.Any(item => item == null || item.SoLuong < 1)
+                || cart.Select(item => item.MaSP).Distinct().Count() != cart.Count)
+                return CartError("Giỏ hàng trống hoặc không hợp lệ. Vui lòng chọn lại sản phẩm.");
+            var member = db.ThanhVien.SingleOrDefault(item => item.MaThanhVien == sessionMember.MaThanhVien
+                                                            && item.TaiKhoan == sessionMember.TaiKhoan);
+            if (member == null)
             {
-                khach = new KhachHang();
-                khach.TenKH = tv.HoTen;
-                khach.Email = tv.Email;
-                khach.SoDienThoai = tv.SoDienThoai;
-                khach.DiaChi = tv.DiaChi;
-                khach.MaThanhVien = tv.MaThanhVien;
-
-                db.KhachHang.Add(khach);
-                db.SaveChanges();
+                Session["TaiKhoan"] = null;
+                return RedirectToAction("Index", "Home");
             }
-
-            // ===== TẠO ĐƠN HÀNG =====
-            DonDatHang ddh = new DonDatHang();
-            ddh.MaKH = khach.MaKH;   // 🔥 QUAN TRỌNG
-            ddh.NgayDat = DateTime.Now;
-            ddh.TinhTrangGiaoHang = false;
-            ddh.DaThanhToan = false;
-            ddh.UuDai = 0;
-            ddh.DaHuy = false;
-            ddh.DaXoa = false;
-
-            db.DonDatHang.Add(ddh);
-            db.SaveChanges();
-
-            // ===== THÊM CHI TIẾT =====
-            List<ItemGioHang> lstGH = LayGioHang();
-
-            foreach (var item in lstGH)
+            var ids = cart.Select(item => item.MaSP).ToList();
+            var products = db.SanPham.Where(item => ids.Contains(item.MaSP) && item.DaXoa != true)
+                .ToDictionary(item => item.MaSP);
+            foreach (var item in cart)
             {
-                ChiTietDonDatHang ctdh = new ChiTietDonDatHang();
-                ctdh.MaDDH = ddh.MaDDH;
-                ctdh.MaSP = item.MaSP;
-                ctdh.TenSP = item.TenSP;
-                ctdh.SoLuong = item.SoLuong;
-                ctdh.Dongia = item.DonGia;
-
-                db.ChiTietDonDatHang.Add(ctdh);
+                SanPham product;
+                if (!products.TryGetValue(item.MaSP, out product) || !CanOrder(product, item.SoLuong))
+                    return CartError("Một sản phẩm không còn bán hoặc không đủ tồn kho. Vui lòng cập nhật giỏ hàng.");
+                UpdateItem(item, product, item.SoLuong);
             }
-
-            db.SaveChanges();
-
+            using (var transaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var customer = db.KhachHang.FirstOrDefault(item => item.MaThanhVien == member.MaThanhVien);
+                    if (customer == null)
+                    {
+                        customer = new KhachHang
+                        {
+                            TenKH = member.HoTen,
+                            Email = member.Email,
+                            SoDienThoai = member.SoDienThoai,
+                            DiaChi = member.DiaChi,
+                            MaThanhVien = member.MaThanhVien
+                        };
+                        db.KhachHang.Add(customer);
+                    }
+                    var order = new DonDatHang
+                    {
+                        KhachHang = customer,
+                        NgayDat = DateTime.Now,
+                        TinhTrangGiaoHang = false,
+                        DaThanhToan = false,
+                        UuDai = 0,
+                        DaHuy = false,
+                        DaXoa = false
+                    };
+                    foreach (var item in cart)
+                    {
+                        order.ChiTietDonDatHang.Add(new ChiTietDonDatHang
+                        {
+                            MaSP = item.MaSP,
+                            TenSP = item.TenSP,
+                            SoLuong = item.SoLuong,
+                            Dongia = item.DonGia
+                        });
+                    }
+                    db.DonDatHang.Add(order);
+                    db.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (DbUpdateException)
+                {
+                    transaction.Rollback();
+                    return CartError("Chưa lưu được đơn hàng. Giỏ hàng của bạn vẫn được giữ lại để thử lại.");
+                }
+            }
             Session["GioHang"] = null;
-
             return RedirectToAction("Index", "DonHang");
         }
 
-
-        #region Methods
-        //Lấy giỏ hàng
-        public List<ItemGioHang> LayGioHang()
+        private string AddProduct(int productId)
         {
-            //nếu giỏ hàng đã tồn tại
-            List<ItemGioHang> lstGioHang = Session["GioHang"] as List<ItemGioHang>; //lưu giỏ hàng vào session giohang để quản lý
-            if (lstGioHang == null)
+            var product = db.SanPham.SingleOrDefault(item => item.MaSP == productId && item.DaXoa != true);
+            if (!CanOrder(product, 1))
+                return "Sản phẩm không còn bán hoặc đã hết hàng.";
+            var cart = LayGioHang();
+            var itemInCart = cart.SingleOrDefault(item => item.MaSP == productId);
+            if (itemInCart != null)
             {
-                //Nếu session giỏ hàng ko tồn tại thì khởi tạo giỏ hàng
-                lstGioHang = new List<ItemGioHang>();
-                Session["GioHang"] = lstGioHang;
+                if (itemInCart.SoLuong < 1 || itemInCart.SoLuong >= product.SoLuongTon.GetValueOrDefault())
+                    return "Số lượng trong giỏ hàng đã đạt số lượng tồn kho.";
+                UpdateItem(itemInCart, product, itemInCart.SoLuong + 1);
             }
-            return lstGioHang;
+            else
+            {
+                itemInCart = new ItemGioHang { MaSP = product.MaSP };
+                UpdateItem(itemInCart, product, 1);
+                cart.Add(itemInCart);
+            }
+            return null;
         }
 
-        // tính tổng số lg
-        public double TinhTongSoLuong()
+        private static bool CanOrder(SanPham product, int quantity)
         {
-            //lấy giỏ hàng
-            List<ItemGioHang> lstGioHang = Session["GioHang"] as List<ItemGioHang>;
-            if(lstGioHang == null)  //nếu chưa có list giỏ hàng thì trả về gtri = 0
-            {
-                return 0;
-            }
-            return lstGioHang.Sum(n => n.SoLuong); //trả về tổng số lượng của list giỏ hàng
+            return quantity > 0 && product != null && product.DaXoa != true
+                   && product.DonGia.HasValue && product.DonGia.Value >= 0
+                   && product.SoLuongTon.GetValueOrDefault() >= quantity;
         }
 
-        //tính tổng tiền
-        public decimal TinhTongTien()
+        private static void UpdateItem(ItemGioHang item, SanPham product, int quantity)
         {
-            //lấy giỏ hàng
-            List<ItemGioHang> lstGioHang = Session["GioHang"] as List<ItemGioHang>;
-            if (lstGioHang == null) //nếu chưa có list giỏ hàng thì trả về gtri = 0
-            {
-                return 0;
-            }
-            return lstGioHang.Sum(n => n.ThanhTien);    //trả về tổng tiền của list giỏ hàng
+            item.TenSP = product.TenSP;
+            item.HinhAnh = product.HinhAnh;
+            item.DonGia = product.DonGia.Value;
+            item.SoLuong = quantity;
+            item.ThanhTien = item.DonGia * quantity;
         }
-        #endregion
 
-        //Giải phóng dung lượng biến db, để ở cuối controller
+        private List<ItemGioHang> LayGioHang()
+        {
+            var cart = Session["GioHang"] as List<ItemGioHang>;
+            if (cart == null)
+            {
+                cart = new List<ItemGioHang>();
+                Session["GioHang"] = cart;
+            }
+            return cart;
+        }
+
+        private ActionResult CartError(string message)
+        {
+            TempData["ErrorMessage"] = message;
+            return RedirectToAction("XemGioHang");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
-            {
-                if (db != null)
-                    db.Dispose();
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

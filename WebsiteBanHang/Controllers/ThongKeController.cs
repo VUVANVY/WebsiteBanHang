@@ -5,10 +5,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using WebsiteBanHang.Models;
+using WebsiteBanHang.Security;
 
 namespace WebsiteBanHang.Controllers
 {
-    [AllowAnonymous]
+    [Authorize(Roles = "QuanLy,QuanTriWeb")]
     public class ThongKeController : Controller
     {
         QuanLyBanHangEntities db = new QuanLyBanHangEntities();
@@ -27,6 +28,7 @@ namespace WebsiteBanHang.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "QuanTriWeb")]
         public ActionResult DangkyAdmin()
         {
             ViewBag.CauHoi = new SelectList(LoadCauHoi());  //gắn các câu hỏi vào viewbag để hiển thị lên view
@@ -35,13 +37,22 @@ namespace WebsiteBanHang.Controllers
         }
 
         [HttpPost]
-        public ActionResult DangkyAdmin(ThanhVien tv)
+        [Authorize(Roles = "QuanTriWeb")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DangkyAdmin([Bind(Include = "TaiKhoan,MatKhau,HoTen,DiaChi,Email,SoDienThoai,CauHoi,CauTraLoi")] ThanhVien tv)
         {
             ViewBag.CauHoi = new SelectList(LoadCauHoi());
 
             if (ModelState.IsValid)
             {
+                if (db.ThanhVien.Any(n => n.TaiKhoan == tv.TaiKhoan))
+                {
+                    ModelState.AddModelError("TaiKhoan", "Tài khoản đã tồn tại.");
+                    return View(tv);
+                }
+                tv.MaThanhVien = 0;
                 tv.MaLoaiTV = 2;
+                tv.MatKhau = PasswordService.Hash(tv.MatKhau);
                 //Thêm khách hàng vào csdl
                 db.ThanhVien.Add(tv);  //sau khi lấy được các thuộc tính trong biến tv qua các textbox thì truyền tv vào dbset ThanhViens
                                         //Lưu thay đổi
@@ -51,15 +62,27 @@ namespace WebsiteBanHang.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public ActionResult DangNhapAdmin(FormCollection f)
         {
-            string taikhoan = f["txtTenDangNhap"].ToString();   //lấy chuỗi trong txtTenDangNhap
-            string matKhau = f["txtMatKhau"].ToString();    //lấy chuỗi trong txtMatKhau
+            string taikhoan = f["txtTenDangNhap"];
+            string matKhau = f["txtMatKhau"];
+            if (string.IsNullOrWhiteSpace(taikhoan) || string.IsNullOrEmpty(matKhau))
+                return Content("Tài khoản hoặc mật khẩu không chính xác.");
 
-            ThanhVien tv = db.ThanhVien.SingleOrDefault(n => n.TaiKhoan == taikhoan && n.MatKhau == matKhau);      //so sánh với tk và mk trong csdl
-            if (tv != null)
+            ThanhVien tv = db.ThanhVien.SingleOrDefault(n => n.TaiKhoan == taikhoan);
+            bool needsUpgrade;
+            if (tv != null && PasswordService.Verify(matKhau, tv.MatKhau, out needsUpgrade))
             {
-                var lstQuyen = db.LoaiThanhVien_Quyen.Where(n => n.MaLoaiTV == tv.MaLoaiTV);   //lấy ra list quyền tương ứng loaitv
+                var lstQuyen = db.LoaiThanhVien_Quyen.Where(n => n.MaLoaiTV == tv.MaLoaiTV).ToList();
+                if (!lstQuyen.Any(n => n.MaQuyen == "QuanLy" || n.MaQuyen == "QuanTriWeb"))
+                    return Content("Tài khoản không có quyền quản trị.");
+                if (needsUpgrade)
+                {
+                    tv.MatKhau = PasswordService.Hash(matKhau);
+                    db.SaveChanges();
+                }
                 string Quyen = "";
                 if (lstQuyen.Count() != 0)
                 {
@@ -83,15 +106,16 @@ namespace WebsiteBanHang.Controllers
 
             FormsAuthentication.SignOut();  //xóa bộ nhớ cookie
 
-            return RedirectToAction("Index","ThongKe");
+            return RedirectToAction("Index", "Home");
         }
 
+        [AllowAnonymous]
         public ActionResult LoiPhanquyen()
         {
             return View();
         }
 
-        public void PhanQuyen(string Taikhoan, string Quyen)
+        private void PhanQuyen(string Taikhoan, string Quyen)
         {
             FormsAuthentication.Initialize();
 
@@ -102,21 +126,26 @@ namespace WebsiteBanHang.Controllers
                                             false,  //ko lưu
                                             Quyen,  //Lấy chuỗi phân quyền
                                             FormsAuthentication.FormsCookiePath);   //Lấy đg dẫn cookie thay vì name
-            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket));  //tạo cookie(tự tạo name, mã hóa thông tin ticket add vào cookie)
+            var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, FormsAuthentication.Encrypt(ticket))
+            {
+                HttpOnly = true,
+                Secure = Request.IsSecureConnection,
+                Path = FormsAuthentication.FormsCookiePath
+            };
             if (ticket.IsPersistent) cookie.Expires = ticket.Expiration;    //ktra cookie có chưa
             Response.Cookies.Add(cookie);     //
         }
 
 
         //thống kê doanh thu từ khi web thành lập
-        public decimal ThongKeDoanhThu()
+        private decimal ThongKeDoanhThu()
         {
             decimal TongDoanhThu = db.ChiTietDonDatHang
                                      .Sum(n => (decimal?)n.SoLuong * n.Dongia) ?? 0;
 
             return TongDoanhThu;
         }
-        public decimal ThongKeDoanhThuThang(int Thang,int Nam)
+        private decimal ThongKeDoanhThuThang(int Thang,int Nam)
         {
             var lstDDH = db.DonDatHang.Where(n => n.NgayDat.Value.Month == Thang && n.NgayDat.Value.Year == Nam);  //lấy ds đơn hàng có date tương ứng
             decimal TongDoanhThu = 0;
@@ -128,18 +157,18 @@ namespace WebsiteBanHang.Controllers
         }
         
         //Thống kê tổng đơn hàng
-        public double ThongKeDonHang()
+        private double ThongKeDonHang()
         {
             double slddh = db.DonDatHang.Count();    //đếm số đơn hàng
             return slddh;
         }
-        public double ThongKeThanhVien()
+        private double ThongKeThanhVien()
         {
             double sltv = db.ThanhVien.Count();    //đếm số thành viên
             return sltv;
         }
 
-        public List<string> LoadCauHoi()
+        private List<string> LoadCauHoi()
         {
             List<string> lstCauHoi = new List<string>();    //tạo list câu hỏi chứa câu hỏi
             lstCauHoi.Add("Họ tên người cha bạn là gì?");
@@ -158,12 +187,8 @@ namespace WebsiteBanHang.Controllers
         //Giải phóng dung lượng biến db, để ở cuối controller
         protected override void Dispose(bool disposing)
         {
-            if(disposing)
-            {
-                if (db != null)
-                    db.Dispose();
+            if (disposing && db != null)
                 db.Dispose();
-            }
             base.Dispose(disposing);
         }
     }

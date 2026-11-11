@@ -23,3 +23,8 @@
 *.mdf
 *.ldf
 *.bak
+
+# Local deployment packages and credentials
+/artifacts/
+*.PublishSettings
+*.deployment-secrets.*

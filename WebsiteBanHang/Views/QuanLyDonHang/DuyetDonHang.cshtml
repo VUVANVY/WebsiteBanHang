@@ -1,4 +1,4 @@
-﻿@model WebsiteBanHang.Models.DonDatHang
+@model WebsiteBanHang.Models.DonDatHang
 @{
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Views/Layout/AdminLayout.cshtml";
@@ -109,20 +109,26 @@
 
             <!-- BUTTON -->
             <div class="mt-4 text-end">
-                @if (Model.TinhTrangGiaoHang == false)
+                @if (Model.TinhTrangGiaoHang != true && Model.DaThanhToan == true && Model.DaHuy != true)
                 {
-                    <a href="@Url.Action("GiaoHang", new { id = Model.MaDDH })"
-                       class="btn btn-success px-4 me-2">
-                        <i class="fas fa-truck me-1"></i> Giao hàng
-                    </a>
+                    using (Html.BeginForm("GiaoHang", "QuanLyDonHang", new { id = Model.MaDDH }, FormMethod.Post, new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success px-4 me-2">
+                            <i class="fas fa-truck me-1"></i> Giao hàng
+                        </button>
+                    }
                 }
 
-                @if (Model.DaHuy == false)
+                @if (Model.DaHuy != true && Model.TinhTrangGiaoHang != true)
                 {
-                    <a href="@Url.Action("HuyDon", new { id = Model.MaDDH })"
-                       class="btn btn-danger px-4 me-2">
-                        <i class="fas fa-times me-1"></i> Hủy đơn
-                    </a>
+                    using (Html.BeginForm("HuyDon", "QuanLyDonHang", new { id = Model.MaDDH }, FormMethod.Post, new { @class = "d-inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger px-4 me-2">
+                            <i class="fas fa-times me-1"></i> Hủy đơn
+                        </button>
+                    }
                 }
 
                 <a href="@Url.Action("ChuaThanhToan")"

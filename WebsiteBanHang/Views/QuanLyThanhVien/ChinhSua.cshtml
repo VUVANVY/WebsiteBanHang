@@ -59,8 +59,9 @@
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Mật khẩu</label>
-                        @Html.PasswordFor(m => m.MatKhau,
-                            new { @class = "form-control rounded-pill" })
+                        <input type="password" name="MatKhau" id="MatKhau"
+                               class="form-control rounded-pill" autocomplete="new-password" />
+                        <small class="text-muted">Để trống để giữ mật khẩu hiện tại.</small>
                     </div>
 
                     <div class="col-md-6">
