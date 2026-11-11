@@ -1,0 +1,124 @@
+﻿@model WebsiteBanHang.Models.SanPham
+@{
+    ViewBag.Title = "Upload hình sản phẩm";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <h3 class="fw-bold mb-4 text-primary">
+        <i class="fas fa-images me-2"></i> Upload hình sản phẩm
+    </h3>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+
+            <h5 class="fw-bold text-primary mb-4">
+                Tên sản phẩm: @Model.TenSP
+            </h5>
+
+            @using (Html.BeginForm("UploadHinh", "QuanLySanPham",
+                FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.MaSP)
+
+                <!-- ================= PREVIEW HÌNH HIỆN TẠI ================= -->
+                <div class="row g-4 mb-5">
+
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                    {
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <img src="~/Content/HinhAnhSP/@Model.HinhAnh"
+                                 class="img-fluid rounded shadow-sm" />
+                            <small class="text-muted">Hình chính</small>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh1))
+                    {
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <img src="~/Content/HinhAnhSP/@Model.HinhAnh1"
+                                 class="img-fluid rounded shadow-sm" />
+                            <small class="text-muted">Hình 1</small>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh2))
+                    {
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <img src="~/Content/HinhAnhSP/@Model.HinhAnh2"
+                                 class="img-fluid rounded shadow-sm" />
+                            <small class="text-muted">Hình 2</small>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh3))
+                    {
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <img src="~/Content/HinhAnhSP/@Model.HinhAnh3"
+                                 class="img-fluid rounded shadow-sm" />
+                            <small class="text-muted">Hình 3</small>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh4))
+                    {
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <img src="~/Content/HinhAnhSP/@Model.HinhAnh4"
+                                 class="img-fluid rounded shadow-sm" />
+                            <small class="text-muted">Hình 4</small>
+                        </div>
+                    }
+
+                </div>
+
+                <hr class="my-5" />
+
+                <!-- ================= UPLOAD MỚI ================= -->
+                <div class="row g-4">
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <label class="form-label fw-bold">Hình chính</label>
+                        <input type="file" name="HinhAnh" class="form-control" />
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <label class="form-label fw-bold">Hình 1</label>
+                        <input type="file" name="HinhAnh1" class="form-control" />
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <label class="form-label fw-bold">Hình 2</label>
+                        <input type="file" name="HinhAnh2" class="form-control" />
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <label class="form-label fw-bold">Hình 3</label>
+                        <input type="file" name="HinhAnh3" class="form-control" />
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <label class="form-label fw-bold">Hình 4</label>
+                        <input type="file" name="HinhAnh4" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="text-end mt-5">
+                    <button type="submit"
+                            class="btn btn-primary px-4 me-2">
+                        <i class="fas fa-upload me-1"></i> Upload
+                    </button>
+
+                    <a href="@Url.Action("Index")"
+                       class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i> Trở về
+                    </a>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

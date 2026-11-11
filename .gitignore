@@ -1,0 +1,25 @@
+# Visual Studio and user-specific settings
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.pubxml.user
+*.publishsettings
+
+# Build output and restored NuGet packages
+[Bb]in/
+[Oo]bj/
+/packages/
+[Tt]est[Rr]esults/
+*.log
+
+# Local secrets and database files
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.mdf
+*.ldf
+*.bak

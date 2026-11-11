@@ -1,0 +1,1586 @@
+﻿/* FontAwesome 6 → 5 Compatibility Shim */
+.fa-solid {
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+    display: inline-block;
+    font-style: normal;
+}
+
+.fa-regular {
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 400 !important;
+    display: inline-block;
+    font-style: normal;
+}
+
+.fa-brands {
+    font-family: "Font Awesome 5 Brands" !important;
+    font-weight: 400 !important;
+    display: inline-block;
+    font-style: normal;
+}
+
+
+/* --- Global --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    color: #212529;
+}
+
+img {
+    max-width: 100%;
+}
+
+/* =========================================================
+   HEADER (Mới)
+========================================================= */
+.moto-header {
+    background: #fff;
+    z-index: 1040;
+}
+
+.header-top {
+    background: #fdfdfd;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.8rem;
+    color: #555;
+    font-weight: 500;
+}
+
+.header-top a {
+    color: #555;
+    transition: color 0.2s;
+}
+
+.header-top a:hover {
+    color: #000;
+}
+
+.header-logo {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #111;
+    letter-spacing: -1px;
+}
+
+.header-logo span {
+    color: #777;
+    font-weight: 400;
+}
+
+.header-search .form-control {
+    height: 46px;
+    background: #f8f9fa;
+    border-color: #eee;
+    font-size: 0.9rem;
+}
+
+.header-search .form-control:focus {
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    border-color: #ddd;
+}
+
+.header-search .btn-dark {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.header-actions .btn {
+    transition: all 0.2s;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.cart-wrapper .btn-cart {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #111;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: 1px solid #eee;
+}
+
+.cart-wrapper .btn-cart:hover {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.cart-wrapper .cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border: 2px solid #fff;
+}
+
+/* Sub Navigation */
+.header-nav {
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+
+.main-nav .nav-link {
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+}
+
+.main-nav .nav-link:hover,
+.main-nav .nav-link.active {
+    color: #111 !important;
+}
+
+/* Category Dropdown Toggle */
+.header-nav .dropdown .btn-dark {
+    letter-spacing: 1px;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+/* =========================================================
+   UTILITIES
+========================================================= */
+.fw-700 {
+    font-weight: 700;
+}
+
+.rounded-start-pill {
+    border-top-left-radius: 50rem;
+    border-bottom-left-radius: 50rem;
+}
+
+.rounded-end-pill {
+    border-top-right-radius: 50rem;
+    border-bottom-right-radius: 50rem;
+}
+
+
+/* =========================================================
+   HERO / CAROUSEL
+========================================================= */
+.moto-hero {
+    background-color: #e9ecef;
+    border-bottom: 1px solid #dee2e6;
+}
+
+    .moto-hero .carousel-item {
+        min-height: auto; /* Bỏ cố định chiều cao cũ */
+        aspect-ratio: 2300 / 680; /* Thiết lập tỉ lệ khung hình khớp với ảnh banner của bạn */
+        background-size: contain; /* Ép ảnh luôn nằm trọn trong khung */
+        background-repeat: no-repeat;
+        background-position: center;
+        background-color: #e9ecef; /* Giữ màu nền cũ cho các khoảng trống */
+    }
+
+.moto-hero .carousel-caption-custom {
+    text-align: left;
+}
+
+.moto-hero .carousel-caption-custom h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #212529;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+.moto-hero .carousel-caption-custom p {
+    font-size: 0.95rem;
+    color: #495057;
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+    padding-left: 10px;
+}
+
+.moto-hero .btn-hero {
+    background: #212529;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 28px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background .2s;
+}
+
+.moto-hero .btn-hero:hover {
+    background: #343a40;
+}
+
+.moto-hero .carousel-control-prev,
+.moto-hero .carousel-control-next {
+    width: 5%;
+}
+
+.moto-hero .carousel-control-prev-icon,
+.moto-hero .carousel-control-next-icon {
+    filter: invert(1);
+    width: 32px;
+    height: 32px;
+    /* background-color: rgba(255, 255, 255, 0.8); */
+    border-radius: 50%;
+    background-size: 50%;
+}
+
+.moto-hero .carousel-indicators [data-bs-target] {
+    background-color: #adb5bd;
+    width: 28px;
+    height: 3px;
+    border-radius: 2px;
+}
+
+.moto-hero .carousel-indicators .active {
+    background-color: #343a40;
+}
+
+/* Brand icons row */
+.moto-brands {
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 14px 0;
+}
+
+.moto-brands .brand-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #495057;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    border-right: 1px solid #dee2e6;
+}
+
+.moto-brands .brand-item:last-child {
+    border-right: none;
+}
+
+.moto-brands .brand-item i {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+/* =========================================================
+   SECTION TITLES
+========================================================= */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.section-title h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+    letter-spacing: -0.3px;
+}
+
+.section-title .section-icon {
+    width: 36px;
+    height: 36px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #495057;
+    font-size: 1rem;
+}
+
+/* =========================================================
+   PRODUCT CARDS
+========================================================= */
+.product-card {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow .2s, transform .2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
+    transform: translateY(-3px);
+}
+
+.product-card .card-img-wrap {
+    background: #f8f9fa;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-card .card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .3s;
+}
+
+.product-card:hover .card-img-wrap img {
+    transform: scale(1.04);
+}
+
+.product-card .card-body {
+    padding: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Category Dropdown Styling */
+.header-nav .dropdown-menu {
+    border-radius: 0 0 8px 8px;
+    margin-top: 0 !important;
+}
+
+.header-nav .dropdown-menu .nav-item {
+    width: 100%;
+}
+
+.header-nav .dropdown-menu .nav-link {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.header-nav .dropdown-menu .nav-link:hover {
+    background: #f8f9fa;
+}
+
+.header-nav .dropdown-menu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -5px;
+    border-radius: 0 8px 8px 8px;
+    display: none;
+    box-shadow: 10px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.header-nav .dropdown-menu .nav-item:hover>.dropdown-menu {
+    display: block;
+}
+
+/* Ẩn caret mặc định của Bootstrap và thay bằng chevron nếu cần */
+.header-nav .dropdown-menu .dropdown-toggle::after {
+    display: inline-block;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid transparent;
+    border-right: 0;
+    border-bottom: .3em solid transparent;
+    border-left: .3em solid;
+}
+
+.product-card .card-brand {
+    font-size: 0.78rem;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.product-card .card-price {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 12px;
+    margin-top: auto;
+}
+
+.product-card .card-price .old-price {
+    font-size: 0.8rem;
+    color: #adb5bd;
+    font-weight: 400;
+    text-decoration: line-through;
+    margin-left: 6px;
+}
+
+.product-card .btn-add-cart {
+    width: 100%;
+    background: #212529;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: background .2s;
+}
+
+.product-card .btn-add-cart:hover {
+    background: #343a40;
+}
+
+.product-card .badge-new {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #212529;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* =========================================================
+   MAIN CONTENT SECTION
+========================================================= */
+.moto-content {
+    padding: 36px 0;
+    background-color: #f8f9fa;
+    min-height: 60vh;
+}
+
+/* =========================================================
+   SIDEBAR (ProductLayout)
+========================================================= */
+.moto-sidebar {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.moto-sidebar .sidebar-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6c757d;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 12px;
+}
+
+.moto-sidebar .list-group-item {
+    border: none;
+    padding: 8px 0;
+    font-size: 0.875rem;
+    color: #495057;
+    border-bottom: 1px solid #f0f0f0;
+    background: transparent;
+    transition: color .15s, padding-left .15s;
+}
+
+.moto-sidebar .list-group-item:hover {
+    color: #212529;
+    padding-left: 6px;
+}
+
+.moto-sidebar .list-group-item:last-child {
+    border-bottom: none;
+}
+
+.moto-sidebar .sidebar-tags .badge {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    font-weight: 500;
+    font-size: 0.78rem;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background .15s;
+}
+
+.moto-sidebar .sidebar-tags .badge:hover {
+    background: #e9ecef;
+    color: #212529;
+}
+
+/* =========================================================
+   BREADCRUMB
+========================================================= */
+.moto-breadcrumb {
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 10px 0;
+}
+
+.moto-breadcrumb .breadcrumb {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+.moto-breadcrumb .breadcrumb-item a {
+    color: #6c757d;
+}
+
+.moto-breadcrumb .breadcrumb-item.active {
+    color: #212529;
+}
+
+/* =========================================================
+   FILTER BAR
+========================================================= */
+.moto-filter-bar {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.moto-filter-bar .filter-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.moto-filter-bar select {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 0.85rem;
+    color: #495057;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.moto-filter-bar select:focus {
+    outline: none;
+    border-color: #adb5bd;
+}
+
+/* =========================================================
+   LOGIN MODAL
+========================================================= */
+.moto-modal .modal-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    padding: 16px 24px;
+}
+
+.moto-modal .modal-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #212529;
+}
+
+.moto-modal .modal-body {
+    padding: 24px;
+}
+
+.moto-modal .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 6px;
+}
+
+.moto-modal .form-control {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+    background: #fff;
+    color: #212529;
+    transition: border-color .2s;
+}
+
+.moto-modal .form-control:focus {
+    border-color: #adb5bd;
+    box-shadow: none;
+    background: #fff;
+}
+
+.moto-modal .btn-login-submit {
+    width: 100%;
+    background: #212529;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 11px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background .2s;
+}
+
+.moto-modal .btn-login-submit:hover {
+    background: #343a40;
+}
+
+.moto-modal .modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 12px 24px;
+    background: #f8f9fa;
+}
+
+/* =========================================================
+   REGISTER / AUTH PAGES
+========================================================= */
+.moto-auth-section {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    padding: 40px 16px;
+}
+
+.moto-auth-card {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 36px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
+}
+
+.moto-auth-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 6px;
+}
+
+.moto-auth-card .auth-subtitle {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 24px;
+}
+
+.moto-auth-card .form-control {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+}
+
+.moto-auth-card .form-control:focus {
+    border-color: #adb5bd;
+    box-shadow: none;
+}
+
+.moto-auth-card .btn-submit {
+    width: 100%;
+    background: #212529;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 11px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background .2s;
+    margin-top: 4px;
+}
+
+.moto-auth-card .btn-submit:hover {
+    background: #343a40;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+.moto-footer {
+    background-color: #343a40;
+    color: #adb5bd;
+    padding: 48px 0 0;
+    margin-top: 60px;
+}
+
+.moto-footer h5 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    margin-bottom: 16px;
+}
+
+.moto-footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.moto-footer ul li {
+    margin-bottom: 10px;
+}
+
+.moto-footer ul li a {
+    color: #adb5bd;
+    font-size: 0.875rem;
+    transition: color .2s;
+    text-decoration: none;
+}
+
+.moto-footer ul li a:hover {
+    color: #fff;
+}
+
+.moto-footer p {
+    font-size: 0.875rem;
+    color: #adb5bd;
+    line-height: 1.7;
+}
+
+.moto-footer .footer-brand {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.moto-footer .footer-brand span {
+    color: #6c757d;
+    font-weight: 400;
+}
+
+.moto-footer .social-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.moto-footer .social-links a {
+    width: 36px;
+    height: 36px;
+    background: #495057;
+    color: #fff;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    transition: background .2s;
+    text-decoration: none;
+}
+
+.moto-footer .social-links a:hover {
+    background: #6c757d;
+}
+
+.moto-footer .newsletter-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.moto-footer .newsletter-form input {
+    flex: 1;
+    background: #495057;
+    border: 1px solid #6c757d;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 0.875rem;
+    color: #fff;
+}
+
+.moto-footer .newsletter-form input::placeholder {
+    color: #adb5bd;
+}
+
+.moto-footer .newsletter-form input:focus {
+    outline: none;
+    border-color: #adb5bd;
+}
+
+.moto-footer .newsletter-form button {
+    background: #fff;
+    color: #212529;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+}
+
+.moto-footer .newsletter-form button:hover {
+    background: #e9ecef;
+}
+
+.moto-footer .footer-bottom {
+    margin-top: 40px;
+    padding: 16px 0;
+    border-top: 1px solid #495057;
+}
+
+.moto-footer .footer-bottom p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.moto-footer .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 0.875rem;
+}
+
+.moto-footer .contact-item i {
+    color: #6c757d;
+    margin-top: 2px;
+    min-width: 16px;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+.moto-pagination .page-link {
+    border-color: #dee2e6;
+    color: #495057;
+    border-radius: 6px;
+    margin: 0 2px;
+    font-size: 0.875rem;
+}
+
+.moto-pagination .page-item.active .page-link {
+    background: #212529;
+    border-color: #212529;
+    color: #fff;
+}
+
+.moto-pagination .page-link:hover {
+    background: #f8f9fa;
+    border-color: #dee2e6;
+    color: #212529;
+}
+
+/* =========================================================
+   RESPONSIVE TWEAKS
+========================================================= */
+@media (max-width: 991.98px) {
+    .moto-navbar .navbar-search {
+        display: none;
+    }
+
+    .moto-hero .carousel-item {
+        min-height: 260px;
+        padding: 36px 0;
+    }
+
+    .moto-hero .carousel-caption-custom h2 {
+        font-size: 1.7rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .moto-hero .carousel-caption-custom p {
+        display: none;
+    }
+
+    .moto-brands .brand-item {
+        border-right: none;
+    }
+
+    .moto-sidebar {
+        margin-bottom: 24px;
+    }
+
+    .moto-auth-card {
+        padding: 24px;
+    }
+}
+
+/* =========================================================
+   MOTO CARD (mới - dùng cho product listings)
+========================================================= */
+.moto-card {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow .22s, transform .22s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.moto-card:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, .1);
+    transform: translateY(-4px);
+}
+
+.moto-card-img-wrap {
+    position: relative;
+    background: #f8f9fa;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.moto-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .3s;
+}
+
+.moto-card:hover .moto-card-img-wrap img {
+    transform: scale(1.05);
+}
+
+.moto-card-featured .moto-card-img-wrap {
+    aspect-ratio: 21/9;
+}
+
+.moto-card-featured .moto-card-img-wrap img {
+    transform: scale(1.5);
+    object-fit: cover;
+    padding: 0;
+}
+
+.moto-card-featured:hover .moto-card-img-wrap img {
+    transform: scale(1.6);
+}
+
+.badge-new {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #212529;
+    color: #fff;
+    font-size: .68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.badge-featured {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #495057;
+    color: #fff;
+    font-size: .7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+.moto-card-body {
+    padding: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-brand {
+    font-size: .75rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-bottom: 4px;
+}
+
+.small-brand {
+    font-size: .7rem;
+}
+
+.card-name {
+    font-size: .9rem;
+    font-weight: 600;
+    color: #212529;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+.card-name a {
+    color: inherit;
+}
+
+.card-name a:hover {
+    color: #495057;
+}
+
+.card-name-sm {
+    font-size: .8rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.card-price-row {
+    margin-top: auto;
+    margin-bottom: 12px;
+}
+
+.card-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #212529;
+}
+
+.card-price small {
+    font-size: .75rem;
+    font-weight: 500;
+    color: #6c757d;
+}
+
+.card-price-sm {
+    font-size: .82rem;
+    font-weight: 700;
+    color: #343a40;
+    display: block;
+    margin-top: 4px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.btn-card-detail {
+    background: #212529;
+    color: #fff;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: .82rem;
+    font-weight: 500;
+    text-align: center;
+    transition: background .2s;
+    text-decoration: none;
+}
+
+.btn-card-detail:hover {
+    background: #343a40;
+    color: #fff;
+}
+
+.btn-card-cart {
+    width: 36px;
+    height: 36px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .85rem;
+    color: #495057;
+    flex-shrink: 0;
+    transition: background .2s;
+    text-decoration: none;
+}
+
+.btn-card-cart:hover {
+    background: #e9ecef;
+    color: #212529;
+}
+
+/* =========================================================
+   SECTION CONTAINER (homepage sections)
+========================================================= */
+.moto-section {
+    padding: 8px 0;
+}
+
+.section-icon-box {
+    width: 40px;
+    height: 40px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #495057;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #212529;
+    margin: 0;
+    letter-spacing: -.3px;
+}
+
+.section-title span {
+    color: #6c757d;
+    font-weight: 400;
+}
+
+.section-sub {
+    font-size: .8rem;
+    color: #6c757d;
+}
+
+.btn-view-all {
+    font-size: .82rem;
+    font-weight: 600;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 7px 16px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: background .2s;
+}
+
+.btn-view-all:hover {
+    background: #f8f9fa;
+    color: #212529;
+}
+
+/* =========================================================
+   PRODUCT DETAIL (XemChiTiet)
+========================================================= */
+.product-brand-tag {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 3px 10px;
+    font-size: .75rem;
+    font-weight: 700;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+.product-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #212529;
+    letter-spacing: -.4px;
+    line-height: 1.25;
+}
+
+.product-price-box {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.product-price-label {
+    font-size: .8rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.product-price-value {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: #212529;
+}
+
+.product-price-value span {
+    font-size: 1rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.product-intro {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 16px;
+    border-left: 3px solid #dee2e6;
+}
+
+.btn-add-cart {
+    background: #212529;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: .95rem;
+    font-weight: 600;
+    text-align: center;
+    transition: background .2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-add-cart:hover {
+    background: #343a40;
+    color: #fff;
+}
+
+.btn-back-list {
+    background: #fff;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-size: .88rem;
+    font-weight: 500;
+    transition: background .2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.btn-back-list:hover {
+    background: #f8f9fa;
+    color: #212529;
+}
+
+.product-meta-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.product-meta-tags span {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: .78rem;
+    color: #495057;
+}
+
+/* Product tabs */
+.product-nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    gap: 4px;
+}
+
+.product-nav-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    border-radius: 6px 6px 0 0;
+    padding: 10px 20px;
+    font-size: .875rem;
+    font-weight: 500;
+    background: transparent;
+}
+
+.product-nav-tabs .nav-link:hover {
+    color: #212529;
+    background: #f8f9fa;
+}
+
+.product-nav-tabs .nav-link.active {
+    color: #212529;
+    background: #fff;
+    border-bottom: 2px solid #212529;
+    font-weight: 600;
+}
+
+.product-tab-content {
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 24px;
+}
+
+.product-description {
+    font-size: .9rem;
+    line-height: 1.8;
+    color: #4a4a4a;
+}
+
+/* =========================================================
+   PAGINATION (moto-pager)
+========================================================= */
+.moto-pager ul {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.moto-pager li a,
+.moto-pager li span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: .82rem;
+    color: #495057;
+    text-decoration: none;
+    transition: background .15s;
+    background: #fff;
+}
+
+.moto-pager li a:hover {
+    background: #f8f9fa;
+}
+
+.moto-pager li.active a,
+.moto-pager li.active span {
+    background: #212529;
+    color: #fff;
+    border-color: #212529;
+}
+
+/* fw-700 utility */
+.fw-700 {
+    font-weight: 700;
+}
+
+@media (max-width: 576px) {
+    .product-title {
+        font-size: 1.3rem;
+    }
+
+    .product-price-value {
+        font-size: 1.3rem;
+    }
+
+    .moto-card-body {
+        padding: 10px;
+    }
+
+    .card-actions {
+        gap: 6px;
+    }
+
+    .btn-card-detail {
+        padding: 6px 10px;
+        font-size: .78rem;
+    }
+}
+
+
+
+
+.cart-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.cart-text {
+    font-weight: 500;
+    color: #212529;
+}
+
+.cart-icon-box {
+    position: relative;
+    width: 36px;
+    height: 36px;
+    background: #e9ecef; /* xám nhạt */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .cart-icon-box i {
+        color: #212529;
+        font-size: 14px;
+    }
+
+.cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 50%;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.pagination {
+    margin-bottom: 0;
+}
+
+    .pagination li {
+        margin: 0 4px;
+    }
+
+        .pagination li a {
+            display: block;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            color: #212529;
+            text-decoration: none;
+        }
+
+        .pagination li.active a {
+            background: #212529;
+            color: #fff;
+            border-color: #212529;
+        }
+
+        .pagination li a:hover {
+            background: #f1f3f5;
+        }
+
+/* ==== TOAST ==== */
+.cart-toast {
+    position: fixed;
+    top: 25px;
+    right: -400px; /* ẩn ngoài màn hình */
+
+    background: #212529;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    min-width: 280px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    transition: all 0.4s ease;
+    z-index: 9999;
+}
+
+    .cart-toast.show {
+        right: 25px;
+    }
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+
+    .toast-content i {
+        color: #28a745;
+        font-size: 18px;
+    }
+
+/* Thanh chạy */
+.toast-progress {
+    margin-top: 10px;
+    height: 3px;
+    background: #28a745;
+    width: 100%;
+    transform-origin: left;
+    transform: scaleX(1);
+    transition: transform 2s linear;
+}
+
+.cart-toast.show .toast-progress {
+    transform: scaleX(0);
+}
+
+/* Rung giỏ hàng */
+.cart-badge.bump {
+    animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.3);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+/* Cho header nằm trên toàn bộ page */
+header,
+.header,
+.navbar {
+    position: relative;
+    z-index: 2000;
+}
+
+/* Dropdown nổi cao hơn nữa */
+.dropdown-menu {
+    position: absolute !important;
+    z-index: 9999 !important;
+}

@@ -1,0 +1,121 @@
+﻿@model WebsiteBanHang.Models.SanPham
+@{
+    ViewBag.Title = "Nhập hàng sản phẩm";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex align-items-center mb-4">
+        <h3 class="fw-bold text-dark">
+            <i class="fas fa-box-open text-primary me-2"></i>
+            Nhập hàng sản phẩm
+        </h3>
+    </div>
+
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-body p-4">
+
+            <!-- THÔNG TIN SẢN PHẨM -->
+            <div class="row align-items-center mb-4">
+
+                <div class="col-md-3 text-center">
+                    @if (!string.IsNullOrEmpty(Model.HinhAnh))
+                    {
+                        <img src="@Url.Content("~/Content/HinhAnhSP/" + Model.HinhAnh)"
+                             class="img-fluid rounded shadow-sm"
+                             style="max-height:180px;" />
+                    }
+                </div>
+
+                <div class="col-md-9">
+                    <h4 class="fw-bold">@Model.TenSP</h4>
+
+                    <p class="mb-1">
+                        <strong>Hãng:</strong>
+                        @Html.DisplayFor(m => m.NhaSanXuat.TenNSX)
+
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Loại:</strong>
+                        @Html.DisplayFor(m => m.LoaiSanPham.TenLoai)
+                    </p>
+
+                    <p>
+                        <strong>Tồn kho hiện tại:</strong>
+                        <span class="badge bg-warning text-dark px-3 py-2">
+                            @(Model.SoLuongTon ?? 0)
+                        </span>
+                    </p>
+                </div>
+
+            </div>
+
+            <hr />
+
+            <!-- FORM NHẬP HÀNG -->
+            <h5 class="fw-bold text-primary mb-3">
+                <i class="fas fa-plus-circle me-2"></i>
+                Thông tin nhập hàng
+            </h5>
+
+            @using (Html.BeginForm("NhapHangDon", "QuanLyPhieuNhap", FormMethod.Post))
+            {
+                @Html.Hidden("MaSP", Model.MaSP)
+
+                <div class="row g-4 mt-2">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">
+                            Nhà cung cấp
+                        </label>
+                        @Html.DropDownList("MaNCC",
+                            (SelectList)ViewBag.MaNCC,
+                            "-- Chọn nhà cung cấp --",
+                            new { @class = "form-select form-select-lg" })
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">
+                            Số lượng nhập
+                        </label>
+                        <input type="number"
+                               name="SoLuongNhap"
+                               class="form-control form-control-lg"
+                               min="1"
+                               required />
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">
+                            Đơn giá nhập
+                        </label>
+                        <input type="number"
+                               name="DonGiaNhap"
+                               class="form-control form-control-lg"
+                               min="0"
+                               required />
+                    </div>
+
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="submit"
+                            class="btn btn-primary px-4 me-2">
+                        <i class="fas fa-plus me-1"></i>
+                        Nhập hàng
+                    </button>
+
+                    <a href="@Url.Action("DSSPHetHang")"
+                       class="btn btn-outline-secondary px-4">
+                        Trở về
+                    </a>
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,84 @@
+﻿@using WebsiteBanHang.Models
+@model IEnumerable<NhaSanXuat>
+
+@{
+    ViewBag.Title = "Quản lý nhà sản xuất";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+    WebGrid grid = new WebGrid(source: Model, rowsPerPage: 10, canPage: true);
+}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">
+                <i class="fas fa-industry text-primary me-2"></i>
+                Quản lý nhà sản xuất
+            </h3>
+            <small class="text-muted">
+                Danh sách nhà sản xuất trong hệ thống
+            </small>
+        </div>
+
+        <a href="@Url.Action("TaoMoi")"
+           class="btn btn-warning px-4 shadow-sm">
+            <i class="fas fa-plus me-1"></i> Thêm mới
+        </a>
+    </div>
+
+    <!-- CARD -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body">
+
+            <div class="mb-3 fw-semibold">
+                Tổng:
+                <span class="text-primary fs-5">
+                    @Model.Count()
+                </span> nhà sản xuất
+            </div>
+
+            <div class="table-responsive">
+
+                @grid.GetHtml(
+                    tableStyle: "table table-hover align-middle table-bordered text-center",
+                    headerStyle: "table-light fw-bold",
+                    footerStyle: "text-center",
+                    numericLinksCount: 5,
+                    mode: WebGridPagerModes.All,
+                    firstText: "Trang đầu",
+                    lastText: "Trang cuối",
+                    previousText: "«",
+                    nextText: "»",
+                    columns: grid.Columns(
+
+                        grid.Column("MaNSX", "Mã NSX", style: "fw-bold"),
+
+                        grid.Column("TenNSX", "Tên nhà sản xuất", format: p =>
+                            Html.Raw("<span class='fw-semibold text-dark'>" +
+                            p.TenNSX + "</span>")
+                        ),
+
+                        grid.Column("ThongTin", "Thông tin"),
+
+                        grid.Column("Thao tác", format: p => Html.Raw(
+
+                            "<a href='/QuanLyNhaSX/ChinhSua/" + p.MaNSX +
+                            "' class='btn btn-sm btn-outline-primary me-1'>" +
+                            "<i class='fas fa-edit'></i></a>" +
+
+                            "<a href='/QuanLyNhaSX/Xoa/" + p.MaNSX +
+                            "' class='btn btn-sm btn-outline-danger'>" +
+                            "<i class='fas fa-trash'></i></a>"
+
+                        ))
+
+                    )
+                )
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

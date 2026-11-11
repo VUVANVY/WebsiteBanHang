@@ -1,0 +1,101 @@
+﻿@model IEnumerable<WebsiteBanHang.Models.DonDatHang>
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <h3 class="fw-bold text-dark">
+            <i class="fas fa-shopping-bag text-primary me-2"></i>
+            Quản lý đơn hàng
+        </h3>
+        <small class="text-muted">Đơn đã giao & đã thanh toán</small>
+    </div>
+
+    <div class="card border-0 shadow rounded-4">
+        <div class="card-body">
+
+            <!-- TAB -->
+            <div class="mb-4">
+                <a href="@Url.Action("ChuaThanhToan")"
+                   class="btn btn-outline-primary rounded-pill px-4 me-2">
+                    Chưa thanh toán
+                </a>
+
+                <a href="@Url.Action("ChuaGiao")"
+                   class="btn btn-outline-primary rounded-pill px-4 me-2">
+                    Chưa giao & đã thanh toán
+                </a>
+
+                <a href="@Url.Action("DaGiaoDaThanhToan")"
+                   class="btn btn-primary rounded-pill px-4">
+                    Đã giao & đã thanh toán
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="bg-light fw-bold">
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Ngày giao</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="6" class="text-muted py-4">
+                                    Không có đơn hàng nào
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">#@item.MaDDH</td>
+
+                                    <td>
+                                        @(item.KhachHang != null
+                                            ? item.KhachHang.TenKH
+                                            : "Khách vãng lai")
+                                    </td>
+
+                                    <td>
+                                        @(item.NgayDat?.ToString("dd/MM/yyyy HH:mm"))
+                                    </td>
+
+                                    <td>
+                                        @(item.NgayGiao?.ToString("dd/MM/yyyy"))
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-success px-3 py-2">
+                                            Đã thanh toán
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <span class="badge bg-success px-3 py-2">
+                                            Hoàn thành
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

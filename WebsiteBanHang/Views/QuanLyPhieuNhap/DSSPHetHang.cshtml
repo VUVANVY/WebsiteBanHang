@@ -1,0 +1,128 @@
+﻿@model PagedList.IPagedList<WebsiteBanHang.Models.SanPham>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Sản phẩm gần hết hàng";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold text-dark mb-1">
+                <i class="fas fa-box-open text-warning me-2"></i>
+                Sản phẩm gần hết hàng
+            </h3>
+            <small class="text-muted">
+                Danh sách sản phẩm có tồn kho thấp
+            </small>
+        </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body">
+
+            <div class="mb-3 fw-semibold">
+                Tổng:
+                <span class="text-danger fs-5">
+                    @Model.Count()
+                </span> sản phẩm
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle table-bordered text-center">
+                    <thead class="table-light fw-bold">
+                        <tr>
+                            <th>Mã</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Hình ảnh</th>
+                            <th>Tồn kho</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var sp in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@sp.MaSP</td>
+
+                                <td>@sp.TenSP</td>
+
+                                <td>
+                                    @if (!string.IsNullOrEmpty(sp.HinhAnh))
+                                    {
+                                        <img src="~/Content/HinhAnhSP/@sp.HinhAnh"
+                                             style="width:80px;height:80px;object-fit:cover;border-radius:10px;" />
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa có</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @{
+                                        int sl = sp.SoLuongTon ?? 0;
+                                    }
+
+                                    @if (sl == 0)
+                                    {
+                                        <span class="badge bg-danger px-3 py-2">
+                                            Hết hàng
+                                        </span>
+                                    }
+                                    else if (sl <= 5)
+                                    {
+                                        <span class="badge bg-warning text-dark px-3 py-2">
+                                            @sl
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success px-3 py-2">
+                                            @sl
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <a href="@Url.Action("NhapHangDon", "QuanLyPhieuNhap", new { id = sp.MaSP })"
+                                       class="btn btn-sm btn-primary px-3">
+                                        <i class="fas fa-plus me-1"></i> Nhập hàng
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="d-flex justify-content-center mt-4">
+
+                    @Html.PagedListPager(Model,
+                        page => Url.Action("DSSPHetHang", new { page }),
+                        new PagedListRenderOptions
+                        {
+                            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                            DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                            MaximumPageNumbersToDisplay = 5,
+
+                            LinkToFirstPageFormat = "Trang đầu",
+                            LinkToLastPageFormat = "Trang cuối",
+                            LinkToPreviousPageFormat = "«",
+                            LinkToNextPageFormat = "»",
+
+                            UlElementClasses = new[] { "pagination", "pagination-sm" }
+                        })
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

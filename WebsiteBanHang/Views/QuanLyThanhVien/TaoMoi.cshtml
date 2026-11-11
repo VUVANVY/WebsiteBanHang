@@ -1,0 +1,168 @@
+﻿@model WebsiteBanHang.Models.ThanhVien
+@{
+    ViewBag.Title = "Tạo mới thành viên";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="successAlert"
+         class="alert alert-success alert-dismissible fade show shadow-sm rounded-3 mt-3">
+        <i class="fas fa-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div id="errorAlert"
+         class="alert alert-danger alert-dismissible fade show shadow-sm rounded-3 mt-3">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        @TempData["ErrorMessage"]
+    </div>
+}
+<div class="container py-4">
+
+    <!-- Page Title -->
+    <div class="mb-4">
+        <h3 class="fw-bold">
+            <i class="fas fa-user-plus me-2 text-primary"></i>
+            Tạo mới thành viên
+        </h3>
+        <p class="text-muted mb-0">Nhập thông tin tài khoản mới vào hệ thống</p>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <!-- ================= TÀI KHOẢN ================= -->
+                <h5 class="fw-bold text-primary mb-4">
+                    <i class="fas fa-key me-2"></i>Thông tin tài khoản
+                </h5>
+
+                <div class="row g-4 mb-5">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Tài khoản *</label>
+                        @Html.TextBoxFor(m => m.TaiKhoan,
+                            new { @class = "form-control rounded-3" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Mật khẩu *</label>
+                        @Html.PasswordFor(m => m.MatKhau,
+                            new { @class = "form-control rounded-3" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Vai trò *</label>
+                        @Html.DropDownListFor(m => m.MaLoaiTV,
+                            (SelectList)ViewBag.MaLoaiTV,
+                            "-- Chọn vai trò --",
+                            new { @class = "form-select rounded-3" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Câu hỏi bảo mật *</label>
+                        @Html.DropDownListFor(m => m.CauHoi,
+                            (SelectList)ViewBag.CauHoi,
+                            "-- Chọn câu hỏi --",
+                            new { @class = "form-select rounded-3" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Câu trả lời *</label>
+                        @Html.TextBoxFor(m => m.CauTraLoi,
+                            new { @class = "form-control rounded-3" })
+                    </div>
+
+                </div>
+
+                <!-- ===== CÁ NHÂN ===== -->
+                <div class="mb-4">
+                    <h5 class="fw-semibold text-primary border-bottom pb-2">
+                        <i class="fas fa-id-card me-2"></i>Thông tin cá nhân
+                    </h5>
+                </div>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Họ và tên(*)</label>
+                        @Html.TextBoxFor(m => m.HoTen,
+                            new { @class = "form-control rounded-pill" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email</label>
+                        @Html.TextBoxFor(m => m.Email,
+                            new { @class = "form-control rounded-pill" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Điện thoại(*)</label>
+                        @Html.TextBoxFor(m => m.SoDienThoai,
+                            new { @class = "form-control rounded-pill" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Địa chỉ</label>
+                        @Html.TextBoxFor(m => m.DiaChi,
+                            new { @class = "form-control rounded-pill" })
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="mt-5 text-end">
+
+                    <button type="submit"
+                            class="btn btn-success px-4 rounded-pill shadow-sm me-2">
+                        <i class="fas fa-save me-1"></i> Lưu
+                    </button>
+
+                    <a href="@Url.Action("Index")"
+                       class="btn btn-secondary px-4 rounded-pill">
+                        <i class="fas fa-arrow-left me-1"></i> Trở về
+                    </a>
+
+                </div>
+            }
+
+        </div>
+    </div>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div id="successAlert" class="alert alert-success alert-dismissible fade show shadow-sm rounded-3">
+            <i class="fas fa-check-circle me-2"></i>
+            @TempData["SuccessMessage"]
+        </div>
+    }
+</div>
+
+<script>
+    setTimeout(function () {
+
+        var success = document.getElementById("successAlert");
+        if (success) {
+            success.classList.remove("show");
+            success.classList.add("fade");
+            setTimeout(function () {
+                success.remove();
+            }, 300);
+        }
+
+        var error = document.getElementById("errorAlert");
+        if (error) {
+            error.classList.remove("show");
+            error.classList.add("fade");
+            setTimeout(function () {
+                error.remove();
+            }, 300);
+        }
+
+    }, 2000);
+</script>

@@ -1,0 +1,173 @@
+﻿@using WebsiteBanHang.Models
+@model IEnumerable<ThanhVien>
+
+@{
+    ViewBag.Title = "Quản lý thành viên";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div id="successAlert"
+         class="alert alert-success alert-dismissible fade show shadow-sm mt-3">
+        <i class="fas fa-check-circle me-2"></i>
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-0">
+                <i class="fas fa-users me-2 text-primary"></i>
+                Quản lý thành viên
+            </h3>
+            <small class="text-muted">
+                Danh sách tài khoản trong hệ thống
+            </small>
+        </div>
+
+        <a href="@Url.Action("TaoMoi")"
+           class="btn btn-warning shadow-sm">
+            <i class="fas fa-plus me-1"></i> Thêm thành viên
+        </a>
+    </div>
+
+    <!-- Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            <!-- Toolbar -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+                    <span class="fw-semibold">
+                        Tổng: <span class="text-primary">@Model.Count()</span> thành viên
+                    </span>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table table-hover align-middle table-bordered">
+
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th style="width:80px">Mã</th>
+                            <th>Tài khoản</th>
+                            <th>Mật khẩu</th>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th style="width:120px">Vai trò</th>
+                            <th style="width:150px">Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="text-center fw-bold">
+                                    @item.MaThanhVien
+                                </td>
+
+                                <td class="fw-semibold">
+                                    @item.TaiKhoan
+                                </td>
+
+                                <td>
+                                    @item.MatKhau
+                                </td>
+
+                                <td>
+                                    @item.HoTen
+                                </td>
+
+                                <td>
+                                    @item.Email
+                                </td>
+
+                                <td>
+                                    @item.SoDienThoai
+                                </td>
+
+                                <td>
+                                    @item.DiaChi
+                                </td>
+
+                                <td class="text-center">
+                                    @{
+                                        string badgeClass = "bg-secondary text-white";
+                                        string roleName = "Không xác định";
+                                        string icon = "fa-user";
+
+                                        if (item.MaLoaiTV == 1)
+                                        {
+                                            badgeClass = "bg-danger text-white";
+                                            roleName = "ADMIN";
+                                            icon = "fa-user-shield";
+                                        }
+                                        else if (item.MaLoaiTV == 2)
+                                        {
+                                            badgeClass = "bg-warning text-dark";
+                                            roleName = "Nhân viên";
+                                            icon = "fa-user-tie";
+                                        }
+                                        else if (item.MaLoaiTV == 3)
+                                        {
+                                            badgeClass = "bg-success text-white";
+                                            roleName = "Khách hàng";
+                                            icon = "fa-user";
+                                        }
+                                    }
+
+                                    <span class="badge rounded-pill @badgeClass px-3 py-2 fw-bold shadow-sm">
+                                        <i class="fas @icon me-1"></i>
+                                        @roleName
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+
+                                    <a href="@Url.Action("ChinhSua", new { id = item.MaThanhVien })"
+                                       class="btn btn-sm btn-outline-primary me-1"
+                                       title="Chỉnh sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                    <a href="@Url.Action("Xoa", new { id = item.MaThanhVien })"
+                                       class="btn btn-sm btn-outline-danger"
+                                       title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    setTimeout(function () {
+        var alertBox = document.getElementById("successAlert");
+        if (alertBox) {
+            alertBox.classList.remove("show");
+            alertBox.classList.add("fade");
+
+            setTimeout(function () {
+                alertBox.remove();
+            }, 300);
+        }
+    }, 2000);
+</script>

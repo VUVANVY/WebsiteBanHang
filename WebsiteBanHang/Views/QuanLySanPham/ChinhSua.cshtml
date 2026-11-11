@@ -1,0 +1,159 @@
+﻿@model WebsiteBanHang.Models.SanPham
+@{
+    ViewBag.Title = "Chỉnh sửa sản phẩm";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <h3 class="fw-bold mb-4 text-primary">
+        <i class="fas fa-edit me-2"></i> Chỉnh sửa sản phẩm
+    </h3>
+
+    @using (Html.BeginForm("ChinhSua", "QuanLySanPham",
+        FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.MaSP)
+
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-5">
+
+                <!-- ================= THÔNG TIN CƠ BẢN ================= -->
+                <h5 class="fw-bold text-primary mb-4">
+                    <i class="fas fa-info-circle me-2"></i>Thông tin cơ bản
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Tên sản phẩm</label>
+                        @Html.TextBoxFor(m => m.TenSP, new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Đơn giá</label>
+                        @Html.TextBoxFor(m => m.DonGia, new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Ngày cập nhật</label>
+                        @Html.TextBoxFor(m => m.NgayCapNhat,
+                            "{0:yyyy-MM-dd}",
+                            new { @class = "form-control", type = "date" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Động cơ</label>
+                        @Html.TextBoxFor(m => m.DongCo, new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <hr class="my-5" />
+
+                <!-- ================= THÔNG SỐ ================= -->
+                <h5 class="fw-bold text-primary mb-4">
+                    <i class="fas fa-chart-bar me-2"></i>Thông số
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Số lượng tồn</label>
+                        @Html.TextBoxFor(m => m.SoLuongTon,
+                            new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Lượt xem</label>
+                        @Html.TextBoxFor(m => m.LuotXem,
+                            new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   name="Moi"
+                                   value="1"
+                                   class="form-check-input"
+                                   @(Model.Moi == 1 ? "checked" : "") />
+                            <label class="form-check-label">
+                                Sản phẩm mới
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="my-5" />
+
+                <!-- ================= PHÂN LOẠI ================= -->
+                <h5 class="fw-bold text-primary mb-4">
+                    <i class="fas fa-tags me-2"></i>Phân loại
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Nhà cung cấp</label>
+                        @Html.DropDownListFor(m => m.MaNCC,
+                            (SelectList)ViewBag.MaNCC,
+                            new { @class = "form-select" })
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Nhà sản xuất</label>
+                        @Html.DropDownListFor(m => m.MaNSX,
+                            (SelectList)ViewBag.MaNSX,
+                            new { @class = "form-select" })
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Loại sản phẩm</label>
+                        @Html.DropDownListFor(m => m.MaLoaiSP,
+                            (SelectList)ViewBag.MaLoaiSP,
+                            new { @class = "form-select" })
+                    </div>
+
+                </div>
+
+                <hr class="my-5" />
+
+                <!-- ================= HÌNH ẢNH ================= -->
+                <h5 class="fw-bold text-primary mb-4">
+                    <i class="fas fa-images me-2"></i>Hình ảnh
+                </h5>
+
+                <div class="mb-4">
+                    <img src="~/Content/HinhAnhSP/@Model.HinhAnh"
+                         style="width:150px;border-radius:10px" />
+                </div>
+                <!-- ================= MÔ TẢ ================= -->
+                <h5 class="fw-bold text-primary mb-4">
+                    <i class="fas fa-align-left me-2"></i>Mô tả
+                </h5>
+
+                <div class="mb-4">
+                    @Html.TextAreaFor(m => m.MoTa,
+                        new { @class = "form-control", rows = 6 })
+                </div>
+
+                <!-- BUTTON -->
+                <div class="text-end mt-4">
+                    <button type="submit"
+                            class="btn btn-success px-4 me-2">
+                        <i class="fas fa-save me-1"></i> Cập nhật
+                    </button>
+
+                    <a href="@Url.Action("Index")"
+                       class="btn btn-secondary px-4">
+                        <i class="fas fa-arrow-left me-1"></i> Trở về
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>

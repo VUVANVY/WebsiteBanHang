@@ -1,0 +1,13 @@
+@model IEnumerable<WebsiteBanHang.Models.NhaSanXuat>
+
+<ul class="list-group list-group-flush">
+    @foreach (var item in Model) {
+        <li class="list-group-item border-0 px-0 py-2 bg-transparent">
+            <a href="@Url.Action("SanPham", "SanPham", new { MaLoaiSP = ViewBag.MaLoaiSP, MaNSX = item.MaNSX })" 
+               class="text-decoration-none text-dark d-flex align-items-center">
+                <i class="fa-solid fa-chevron-right me-2 text-secondary fa-xs"></i>
+                @item.TenNSX
+            </a>
+        </li>
+    }
+</ul>

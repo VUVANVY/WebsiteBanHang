@@ -1,0 +1,127 @@
+﻿@model WebsiteBanHang.Models.DonDatHang
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Views/Layout/HomeLayout.cshtml";
+}
+
+<div class="container py-5">
+
+    <h3 class="fw-bold mb-4">
+        <i class="fas fa-receipt text-primary me-2"></i>
+        Chi tiết đơn hàng #@Model.MaDDH
+    </h3>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <strong>Ngày đặt:</strong>
+                        @(Model.NgayDat.HasValue
+                          ? Model.NgayDat.Value.ToString("dd/MM/yyyy")
+                          : "")
+                    </p>
+
+                    <p>
+                        <strong>Trạng thái:</strong>
+
+                        @{
+                            string status = "";
+                            string badge = "";
+
+                            if (Model.DaHuy == true)
+                            {
+                                status = "Đã hủy";
+                                badge = "bg-danger";
+                            }
+                            else if (Model.DaThanhToan == false)
+                            {
+                                status = "Chưa thanh toán";
+                                badge = "bg-warning text-dark";
+                            }
+                            else if (Model.TinhTrangGiaoHang == false)
+                            {
+                                status = "Đang xử lý";
+                                badge = "bg-primary";
+                            }
+                            else
+                            {
+                                status = "Hoàn thành";
+                                badge = "bg-success";
+                            }
+                        }
+
+                        <span class="badge @badge px-3 py-2">
+                            @status
+                        </span>
+                    </p>
+                </div>
+
+                <div class="col-md-6 text-end">
+                    <p><strong>Khách hàng:</strong> @Model.KhachHang.TenKH</p>
+                    <p><strong>Email:</strong> @Model.KhachHang.Email</p>
+                    <p><strong>SĐT:</strong> @Model.KhachHang.SoDienThoai</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- BẢNG SẢN PHẨM -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ChiTietDonDatHang)
+                        {
+                            <tr>
+                                <td>@item.TenSP</td>
+                                <td>@item.SoLuong</td>
+                                <td>@String.Format("{0:#,##0} đ", item.Dongia)</td>
+                                <td class="fw-bold text-danger">
+                                    @String.Format("{0:#,##0} đ", item.SoLuong * item.Dongia)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-end fw-bold fs-5 mt-3">
+                Tổng tiền:
+                <span class="text-danger">
+                    @String.Format("{0:#,##0} đ",
+                        Model.ChiTietDonDatHang.Sum(x => x.SoLuong * x.Dongia))
+                </span>
+            </div>
+
+            <div class="mt-4 text-end">
+
+                @if (Model.DaThanhToan == false)
+                {
+                    <a href="@Url.Action("ThanhToan", new { id = Model.MaDDH })"
+                       class="btn btn-success rounded-pill px-4">
+                        <i class="fas fa-credit-card me-2"></i> Thanh toán
+                    </a>
+                }
+            <a href="@Url.Action("XuatHoaDon", "DonHang", new { id = Model.MaDDH })"
+               class="btn btn-outline-primary rounded-pill px-4">
+                <i class="fas fa-file-pdf me-2"></i> Xuất hóa đơn
+            </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>

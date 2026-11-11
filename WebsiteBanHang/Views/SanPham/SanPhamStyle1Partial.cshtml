@@ -1,0 +1,77 @@
+﻿@using WebsiteBanHang.Models
+@model IEnumerable<WebsiteBanHang.Models.SanPham>
+
+@{
+    var title = Model != null && Model.Any() && Model.First().LoaiSanPham != null ? Model.First().LoaiSanPham.TenLoai : "Sản phẩm";
+}
+
+<div class="moto-section mb-5">
+    <!-- Section header -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="section-icon-box">
+                <i class="fas fa-motorcycle"></i>
+            </div>
+            <div>
+                <h2 class="section-title mb-0">@title <span>mới nhất</span></h2>
+                <p class="section-sub mb-0">Sản phẩm mới nhập kho, chính hãng 100%</p>
+            </div>
+        </div>
+        @if (Model != null && Model.Any())
+        {
+            <a href="@Url.Action("LoaiSanPham","SanPham", new { MaLoaiSP = Model.First().MaLoaiSP })"
+               class="btn-view-all d-none d-md-flex">
+                Xem tất cả <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        }
+    </div>
+
+    <!-- Product cards row -->
+    <div class="row g-4">
+        @if (Model != null)
+        {
+            foreach (var item in Model.Take(4))
+            {
+                <div class="col-6 col-md-3">
+                    <div class="moto-card">
+                        <div class="moto-card-img-wrap">
+                            <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })">
+                                <img src="@Url.Content("~/Content/HinhAnhSP/" + item.HinhAnh)"
+                                     alt="@item.TenSP" />
+                            </a>
+                            @if (item.Moi == 1)
+                            {
+                                <span class="badge-new">Mới</span>
+                            }
+                        </div>
+                        <div class="moto-card-body">
+                            <p class="card-brand">@(item.NhaSanXuat != null ? item.NhaSanXuat.TenNSX : "Chính hãng")</p>
+                            <h6 class="card-name">
+                                <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })">
+                                    @item.TenSP
+                                </a>
+                            </h6>
+                            <div class="card-price-row">
+                                <span class="card-price">@item.DonGia.Value.ToString("#,##") <small>VNĐ</small></span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })"
+                                   class="btn-card-detail">
+                                    <i class="fas fa-eye me-1"></i>Chi tiết
+                                </a>
+                                @if (Session["TaiKhoan"] != null)
+                                {
+                                    <a href="javascript:void(0);"
+                                       class="btn-card-cart add-to-cart"
+                                       data-id="@item.MaSP">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

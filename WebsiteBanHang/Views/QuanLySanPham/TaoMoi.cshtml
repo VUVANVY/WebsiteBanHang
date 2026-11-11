@@ -1,0 +1,177 @@
+﻿@model WebsiteBanHang.Models.SanPham
+@{
+    ViewBag.Title = "Tạo mới sản phẩm";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark">
+            <i class="fas fa-plus-circle text-primary me-2"></i>
+            Tạo mới sản phẩm
+        </h3>
+    </div>
+
+    @using (Html.BeginForm("TaoMoi", "QuanLySanPham",
+        FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="card shadow border-0 rounded-4">
+            <div class="card-body p-4">
+
+                <!-- ================= THÔNG TIN CƠ BẢN ================= -->
+                <h5 class="fw-bold mb-3 text-primary">
+                    <i class="fas fa-info-circle me-2"></i>Thông tin cơ bản
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Tên sản phẩm</label>
+                        @Html.TextBoxFor(m => m.TenSP,
+                            new { @class = "form-control form-control-lg" })
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Đơn giá</label>
+                        @Html.TextBoxFor(m => m.DonGia,
+                            new { @class = "form-control form-control-lg" })
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label fw-semibold">Động cơ</label>
+                        @Html.TextBoxFor(m => m.DongCo,
+                            new { @class = "form-control" })
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- ================= THÔNG SỐ ================= -->
+                <h5 class="fw-bold mb-3 text-primary">
+                    <i class="fas fa-chart-line me-2"></i>Thông số
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Số lượng tồn</label>
+                        @Html.TextBoxFor(m => m.SoLuongTon,
+                            new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Lượt xem</label>
+                        @Html.TextBoxFor(m => m.LuotXem,
+                            new { @class = "form-control" })
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check form-switch">
+                            <input type="checkbox"
+                                   name="Moi"
+                                   value="1"
+                                   class="form-check-input"
+                                   @(Model?.Moi == 1 ? "checked" : "") />
+                            <label class="form-check-label fw-semibold">
+                                Sản phẩm mới
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- ================= PHÂN LOẠI ================= -->
+                <h5 class="fw-bold mb-3 text-primary">
+                    <i class="fas fa-tags me-2"></i>Phân loại
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Nhà cung cấp</label>
+                        @Html.DropDownList("MaNCC", null,
+                            "-- Chọn NCC --",
+                            new { @class = "form-select" })
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Nhà sản xuất</label>
+                        @Html.DropDownList("MaNSX", null,
+                            "-- Chọn NSX --",
+                            new { @class = "form-select" })
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Loại sản phẩm</label>
+                        @Html.DropDownList("MaLoaiSP", null,
+                            "-- Chọn loại --",
+                            new { @class = "form-select" })
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- ================= HÌNH ẢNH ================= -->
+                <h5 class="fw-bold mb-3 text-primary">
+                    <i class="fas fa-images me-2"></i>Hình ảnh
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Hình chính</label>
+                        <input type="file" name="HinhAnh" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Hình 1</label>
+                        <input type="file" name="HinhAnh1" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Hình 2</label>
+                        <input type="file" name="HinhAnh2" class="form-control" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Hình 3</label>
+                        <input type="file" name="HinhAnh3" class="form-control" />
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- ================= MÔ TẢ ================= -->
+                <h5 class="fw-bold mb-3 text-primary">
+                    <i class="fas fa-align-left me-2"></i>Mô tả
+                </h5>
+
+                @Html.TextAreaFor(m => m.MoTa,
+                    new { @class = "form-control", rows = 5 })
+
+                <!-- BUTTON -->
+                <div class="text-end mt-4">
+                    <button type="submit"
+                            class="btn btn-primary px-4 me-2">
+                        <i class="fas fa-save me-1"></i> Lưu sản phẩm
+                    </button>
+
+                    <a href="@Url.Action("Index")"
+                       class="btn btn-outline-secondary px-4">
+                        Trở về
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>

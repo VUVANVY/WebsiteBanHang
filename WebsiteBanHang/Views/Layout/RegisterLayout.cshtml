@@ -1,0 +1,41 @@
+﻿@using WebsiteBanHang.Models
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MotoShop - Đăng ký / Đăng nhập</title>
+    <!-- Bootstrap 5 (local) -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/bootstrap5.min.css")">
+    <!-- FontAwesome 5 (local) -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/fontawesome/css/all.min.css")">
+    <!-- Custom CSS -->
+    <link href="@Url.Content("~/Content/css/Home_style.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/Content/js/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+</head>
+<body>
+
+<!-- ===== NAVBAR (minimal) ===== -->
+<nav class="moto-navbar navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="@Url.Action("Index","Home")">
+            <div class="logo">
+                <a href="index.html"><img src="~/Content/images/logo.png" alt="logo" height="65"></a>
+            </div>
+        </a>
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <a href="@Url.Action("Index","Home")" class="btn-register">
+                <i class="fas fa-home me-1"></i>Trang chủ
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== BODY ===== -->
+@RenderBody()
+
+<!-- Bootstrap 5 Bundle JS (local) -->
+<script src="~/Content/js/bootstrap5.bundle.min.js"></script>
+</body>
+</html>

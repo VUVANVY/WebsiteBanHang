@@ -1,0 +1,7 @@
+﻿@* GioHangPartial - Bootstrap 5 style cart icon *@
+<a href="@Url.Action("XemGioHang","GioHang")" class="btn-cart position-relative text-decoration-none">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-badge">
+        @(ViewBag.TongSoLuong ?? 0)
+    </span>
+</a>

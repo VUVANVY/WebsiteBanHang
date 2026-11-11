@@ -1,0 +1,113 @@
+﻿@model WebsiteBanHang.Models.ThanhVien
+@{
+    ViewBag.Title = "Xóa thành viên";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container py-4">
+
+    <!-- Title -->
+    <div class="mb-4">
+        <h3 class="fw-bold text-danger">
+            <i class="fas fa-user-times me-2"></i>
+            Xóa thành viên
+        </h3>
+        <p class="text-muted mb-0">
+            Xác nhận xóa tài khoản khỏi hệ thống
+        </p>
+    </div>
+
+    <!-- Warning -->
+    <div class="alert alert-danger shadow-sm">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        Hành động này không thể hoàn tác. Bạn có chắc chắn muốn xóa?
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.MaThanhVien)
+
+                <!-- THÔNG TIN TÀI KHOẢN -->
+                <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
+                    <i class="fas fa-id-badge me-2"></i>Thông tin tài khoản
+                </h5>
+
+                <div class="row g-4 mb-5">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Tài khoản</label>
+                        <input class="form-control rounded-pill"
+                               value="@Model.TaiKhoan"
+                               readonly />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Vai trò</label>
+                        <input class="form-control rounded-pill"
+                               value="@Model.LoaiThanhVien.TenLoai"
+                               readonly />
+                    </div>
+
+                </div>
+
+                <!-- THÔNG TIN CÁ NHÂN -->
+                <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">
+                    <i class="fas fa-user me-2"></i>Thông tin cá nhân
+                </h5>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Họ tên</label>
+                        <input class="form-control rounded-pill"
+                               value="@Model.HoTen"
+                               readonly />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email</label>
+                        <input class="form-control rounded-pill"
+                               value="@Model.Email"
+                               readonly />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Điện thoại</label>
+                        <input class="form-control rounded-pill"
+                               value="@Model.SoDienThoai"
+                               readonly />
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Địa chỉ</label>
+                        <input class="form-control rounded-pill"
+                               value="@Model.DiaChi"
+                               readonly />
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="mt-5 text-end">
+
+                    <button type="submit"
+                            class="btn btn-danger px-4 rounded-pill shadow-sm me-2">
+                        <i class="fas fa-trash me-1"></i> Xác nhận xóa
+                    </button>
+
+                    <a href="@Url.Action("Index")"
+                       class="btn btn-secondary px-4 rounded-pill">
+                        <i class="fas fa-arrow-left me-1"></i> Hủy
+                    </a>
+
+                </div>
+            }
+
+        </div>
+    </div>
+
+</div>

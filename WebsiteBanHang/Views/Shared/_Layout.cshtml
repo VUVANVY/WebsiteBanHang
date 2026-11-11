@@ -1,0 +1,279 @@
+﻿@using WebsiteBanHang.Models
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MotoShop - Sản Phẩm</title>
+    <!-- Bootstrap 5 (local) -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/css/bootstrap5.min.css")">
+    <!-- FontAwesome 5 (local) -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/fontawesome/css/all.min.css")">
+    <!-- Custom CSS -->
+    <link href="@Url.Content("~/Content/css/Home_style.css")" rel="stylesheet" />
+    <!-- jQuery + Unobtrusive Ajax -->
+    <script src="@Url.Content("~/Content/js/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+</head>
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <header class="moto-header">
+        <div class="header-main py-3 border-bottom shadow-sm bg-white">
+            <div class="container d-flex align-items-center justify-content-between">
+                <a class="navbar-brand header-logo" href="@Url.Action("Index","Home")">
+                    <img src="~/Content/images/logo.png" alt="logo" height="65">
+                </a>
+
+                <div class="header-search flex-grow-1 mx-5 d-none d-md-block">
+                    @using (Html.BeginForm("KQTimKiem", "TimKiem", FormMethod.Get, new { @class = "input-group" }))
+                    {
+                        <input class="form-control border-end-0 rounded-start-pill ps-5"
+                               type="text"
+                               name="sTuKhoa"
+                               placeholder="Tìm kiếm mẫu xe..." />
+
+                        <button type="submit" class="btn btn-dark rounded-end-pill px-4">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    }
+                </div>
+
+                <div class="header-actions d-flex align-items-center gap-3">
+
+                    @Html.Action("GioHangPartial", "GioHang")
+
+                    @if (Session["TaiKhoan"] != null && Session["TaiKhoan"].ToString() != "")
+                    {
+                        var tv = (WebsiteBanHang.Models.ThanhVien)Session["TaiKhoan"];
+
+                        <!-- NÚT ĐƠN HÀNG -->
+                        <a href="@Url.Action("Index","DonHang")"
+                           class="btn btn-outline-dark btn-sm rounded-pill px-3">
+                            <i class="fas fa-box me-1"></i> Đơn hàng
+                        </a>
+
+                        <!-- TÊN USER -->
+                        <span class="user-greeting d-none d-lg-inline fw-bold">
+                            <i class="far fa-user-circle me-1"></i>@tv.HoTen
+                        </span>
+
+                        <!-- ĐĂNG XUẤT -->
+                        <a href="@Url.Action("DangXuat","Home")"
+                           class="btn btn-outline-danger btn-sm rounded-pill">
+                            Đăng xuất
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-dark btn-sm rounded-pill px-3"
+                                data-bs-toggle="modal"
+                                data-bs-target="#loginModal2">
+                            Đăng nhập
+                        </button>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Modal -->
+    <div class="modal fade moto-modal" id="loginModal2" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-right-to-bracket me-2 text-secondary"></i>Đăng nhập</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    @using (Ajax.BeginForm("DangNhap", "Home", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "ThongBao2" }))
+                    {
+                        <div class="mb-3">
+                            <label class="form-label">Tên đăng nhập</label>
+                            <input type="text" class="form-control" name="txtTenDangNhap" placeholder="Nhập tên đăng nhập" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" class="form-control" name="txtMatKhau" placeholder="Nhập mật khẩu" required />
+                        </div>
+                        <p id="ThongBao2" class="text-danger fw-semibold" style="font-size:.875rem;"></p>
+                        <button type="submit" class="btn-login-submit">
+                            <i class="fa-solid fa-right-to-bracket me-2"></i>Đăng nhập
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Breadcrumb -->
+    <div class="moto-breadcrumb">
+        <div class="container">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="@Url.Action("Index","Home")"><i class="fa-solid fa-house me-1"></i>Trang chủ</a>
+                    </li>
+                    <li class="breadcrumb-item active">Sản phẩm</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- ===== MAIN CONTENT (Sidebar + Body) ===== -->
+    <div class="moto-content">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Sidebar -->
+                <div class="col-lg-3 col-md-4">
+                    <div class="moto-sidebar">
+                        <div class="sidebar-title">
+                            <i class="fa-solid fa-fire me-2"></i>Hãng bán chạy
+                        </div>
+                        @Html.Action("HangPartial", "SanPham", new { MaLoaiSP = ViewBag.MaLoaiSP })
+
+                        <div class="sidebar-title mt-4">
+                            <i class="fa-solid fa-tags me-2"></i>Thẻ tìm nhanh
+                        </div>
+                        <div class="sidebar-tags d-flex flex-wrap gap-2">
+                            <span class="badge">Vision</span>
+                            <span class="badge">Wave</span>
+                            <span class="badge">Vespa</span>
+                            <span class="badge">Exciter</span>
+                            <span class="badge">Air Blade</span>
+                            <span class="badge">Novou</span>
+                            <span class="badge">Sirius</span>
+                            <span class="badge">Winner</span>
+                            <span class="badge">CBR</span>
+                            <span class="badge">Grande</span>
+                        </div>
+
+                        <div class="sidebar-title mt-4">
+                            <i class="fa-solid fa-star me-2"></i>Bán chạy nhất
+                        </div>
+                        <div class="d-flex align-items-center gap-3 py-2 border-bottom">
+                            <div class="bg-light rounded" style="width:54px;height:54px;display:flex;align-items:center;justify-content:center;">
+                                <i class="fa-solid fa-motorcycle text-secondary fa-lg"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:.82rem;font-weight:600;color:#212529;">Xe moto BMW S1000RR</div>
+                                <div style="font-size:.85rem;color:#6c757d;font-weight:700;">350.000.000 đ</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-3 py-2">
+                            <div class="bg-light rounded" style="width:54px;height:54px;display:flex;align-items:center;justify-content:center;">
+                                <i class="fa-solid fa-motorcycle text-secondary fa-lg"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:.82rem;font-weight:600;color:#212529;">Honda Vision 2024</div>
+                                <div style="font-size:.85rem;color:#6c757d;font-weight:700;">37.000.000 đ</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main body -->
+                <div class="col-lg-9 col-md-8">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="moto-footer">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-4">
+                    <div class="logo">
+                        <a href="index.html"><img src="~/Content/images/logo.png" alt="logo" height="65"></a>
+                    </div>
+                    <p>Cửa hàng xe máy uy tín hàng đầu. Nhập khẩu chính hãng, bảo hành toàn quốc.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h5>Danh mục</h5>
+                    <ul>
+                        <li><a href="@Url.Action("Index","Home")"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>Trang chủ</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>Xe tay ga</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>Xe côn tay</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>Xe số</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-6">
+                    <h5>Hỗ trợ</h5>
+                    <ul>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>Hướng dẫn mua</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>Đổi trả</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>Bảo hành</a></li>
+                        <li><a href="#"><i class="fa-solid fa-chevron-right me-2 fa-xs"></i>FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5>Liên hệ</h5>
+                    <div class="contact-item"><i class="fa-solid fa-location-dot"></i><span>101 Lĩnh Nam, Hoàng Mai, Hà Nội</span></div>
+                    <div class="contact-item"><i class="fa-solid fa-phone"></i><span>086 529 3813</span></div>
+                    <div class="contact-item"><i class="fa-solid fa-envelope"></i><span>vuvanvy@motoshop.vn</span></div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6 text-md-end"><p><i class="fa-solid fa-shield-halved me-1"></i>Thanh toán an toàn &nbsp;|&nbsp; <i class="fa-solid fa-truck-fast me-1"></i>Giao hàng toàn quốc</p></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS (local) -->
+    <script src="~/Content/js/bootstrap5.bundle.min.js"></script>
+    <script>
+        document.addEventListener("click", function (e) {
+
+            var btn = e.target.closest(".add-to-cart");
+            if (!btn) return;
+
+            e.preventDefault();
+
+            var id = btn.getAttribute("data-id");
+
+            fetch("/GioHang/ThemGioHangAjax", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ MaSP: id })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+
+                        var toast = document.getElementById("cartToast");
+                        toast.classList.add("show");
+
+                        setTimeout(function () {
+                            toast.classList.remove("show");
+                        }, 2000);
+
+                        var badge = document.querySelector(".cart-badge");
+                        if (badge) {
+                            badge.innerText = data.total;
+                            badge.classList.add("bump");
+                            setTimeout(() => badge.classList.remove("bump"), 300);
+                        }
+                    }
+                });
+        });
+    </script>
+    <div id="cartToast" class="cart-toast">
+        <div class="toast-content">
+            <i class="fas fa-check-circle"></i>
+            <span>Thêm vào giỏ hàng thành công!</span>
+        </div>
+        <div class="toast-progress"></div>
+    </div>
+</body>
+</html>

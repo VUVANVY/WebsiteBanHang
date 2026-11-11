@@ -1,0 +1,94 @@
+﻿@using WebsiteBanHang.Models
+@model IEnumerable<SanPham>
+
+@{
+    var title = Model != null && Model.Any() && Model.First().LoaiSanPham != null ? Model.First().LoaiSanPham.TenLoai : "Sản phẩm";
+    var items = Model != null ? Model.ToList() : new List<SanPham>();
+}
+
+@if (items.Count >= 5) {
+<div class="moto-section mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div class="d-flex align-items-center gap-3">
+            <div class="section-icon-box">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div>
+                <h2 class="section-title mb-0">@title <span>nổi bật</span></h2>
+                <p class="section-sub mb-0">Được nhiều khách hàng yêu thích nhất</p>
+            </div>
+        </div>
+        <a href="@Url.Action("LoaiSanPham","SanPham", new { MaLoaiSP = items[0].MaLoaiSP })"
+           class="btn-view-all d-none d-md-flex">
+            Xem tất cả <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Featured card: lớn bên trái -->
+        <div class="col-md-6">
+            <div class="moto-card moto-card-featured">
+                <div class="moto-card-img-wrap">
+                    <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[0].MaSP, @tensp = items[0].TenSP })">
+                        <img src="@Url.Content("~/Content/HinhAnhSP/" + items[0].HinhAnh)" alt="@items[0].TenSP" />
+                    </a>
+                    <span class="badge-featured"><i class="fas fa-star me-1"></i>Nổi bật</span>
+                </div>
+                <div class="moto-card-body">
+                    <p class="card-brand">@(items[0].NhaSanXuat != null ? items[0].NhaSanXuat.TenNSX : "Chính hãng")</p>
+                    <h5 class="card-name">
+                        <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[0].MaSP, @tensp = items[0].TenSP })">
+                            @items[0].TenSP
+                        </a>
+                    </h5>
+                    <div class="card-price-row">
+                        <span class="card-price">@items[0].DonGia.Value.ToString("#,##") <small>VNĐ</small></span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[0].MaSP, @tensp = items[0].TenSP })"
+                           class="btn-card-detail flex-grow-1">
+                            <i class="fas fa-eye me-1"></i>Xem chi tiết
+                        </a>
+                        @if (Session["TaiKhoan"] != null)
+                        {
+                            <a href="javascript:void(0);"
+                               class="btn-card-cart add-to-cart"
+                               data-id="@items[0].MaSP">
+                                <i class="fas fa-shopping-cart"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4 cards nhỏ bên phải -->
+        <div class="col-md-6">
+            <div class="row g-3 h-100">
+                @{
+                    for (int i = 1; i <= 4 && i < items.Count; i++) {
+                        <div class="col-6">
+                            <div class="moto-card">
+                                <div class="moto-card-img-wrap">
+                                    <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[i].MaSP, @tensp = items[i].TenSP })">
+                                        <img src="@Url.Content("~/Content/HinhAnhSP/" + items[i].HinhAnh)" alt="@items[i].TenSP" />
+                                    </a>
+                                </div>
+                                <div class="moto-card-body">
+                                    <p class="card-brand small-brand">@(items[i].NhaSanXuat != null ? items[i].NhaSanXuat.TenNSX : "Chính hãng")</p>
+                                    <h6 class="card-name card-name-sm">
+                                        <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[i].MaSP, @tensp = items[i].TenSP })">
+                                            @(items[i].TenSP.Length > 28 ? items[i].TenSP.Substring(0, 28) + "…" : items[i].TenSP)
+                                        </a>
+                                    </h6>
+                                    <span class="card-price card-price-sm">@items[i].DonGia.Value.ToString("#,##") VNĐ</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+}

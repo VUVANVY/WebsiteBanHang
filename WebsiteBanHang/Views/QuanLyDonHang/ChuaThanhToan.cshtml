@@ -1,0 +1,152 @@
+﻿@model IEnumerable<WebsiteBanHang.Models.DonDatHang>
+@{
+    ViewBag.Title = "Quản lý đơn hàng";
+    Layout = "~/Views/Layout/AdminLayout.cshtml";
+}
+
+<div class="container-fluid py-4">
+
+    <!-- TITLE -->
+    <div class="mb-4">
+        <h3 class="fw-bold text-dark">
+            <i class="fas fa-shopping-bag text-primary me-2"></i>
+            Quản lý đơn hàng
+        </h3>
+        <small class="text-muted">Danh sách đơn chưa thanh toán</small>
+    </div>
+
+    <!-- CARD -->
+    <div class="card border-0 shadow rounded-4">
+        <div class="card-body">
+
+            <!-- TAB BUTTONS -->
+            <div class="mb-4">
+                <a href="@Url.Action("ChuaThanhToan")"
+                   class="btn btn-primary rounded-pill px-4 me-2">
+                    Chưa thanh toán
+                </a>
+
+                <a href="@Url.Action("ChuaGiao")"
+                   class="btn btn-outline-primary rounded-pill px-4 me-2">
+                    Chưa giao & đã thanh toán
+                </a>
+
+                <a href="@Url.Action("DaGiaoDaThanhToan")"
+                   class="btn btn-outline-primary rounded-pill px-4">
+                    Đã giao & đã thanh toán
+                </a>
+            </div>
+
+            <!-- TABLE -->
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle text-center">
+                    <thead class="bg-light fw-bold">
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Giao hàng</th>
+                            <th>Thanh toán</th>
+                            <th>Đã hủy</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" class="text-muted py-4">
+                                    Không có đơn hàng nào
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">#@item.MaDDH</td>
+
+                                    <td>
+                                        @(item.KhachHang != null
+                                            ? item.KhachHang.TenKH
+                                            : "Khách vãng lai")
+                                    </td>
+
+                                    <td>
+                                        @(item.NgayDat?.ToString("dd/MM/yyyy HH:mm"))
+                                    </td>
+
+                                    <!-- Giao hàng -->
+                                    <td>
+                                        @if (item.TinhTrangGiaoHang == true)
+                                        {
+                                            <span class="badge bg-success px-3 py-2">
+                                                Đã giao
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark px-3 py-2">
+                                                Chưa giao
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <!-- Thanh toán -->
+                                    <td>
+                                        @if (item.DaThanhToan == true)
+                                        {
+                                            <span class="badge bg-success px-3 py-2">
+                                                Đã thanh toán
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                    <span class="badge bg-danger text-white fw-bold fs-6 px-4 py-2 shadow-sm">
+                                        Chưa thanh toán
+                                    </span>
+                                        }
+                                    </td>
+
+                                    <!-- Đã hủy -->
+                                    <td>
+                                        @if (item.DaHuy == true)
+                                        {
+                                            <span class="badge bg-danger px-3 py-2">
+                                                Đã hủy
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary px-3 py-2">
+                                                Không
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td>
+                                        <a href="@Url.Action("DuyetDonHang", new { id = item.MaDDH })"
+                                           class="btn btn-sm btn-outline-primary me-1">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <a href="@Url.Action("HuyDon", new { id = item.MaDDH })"
+                                           class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
