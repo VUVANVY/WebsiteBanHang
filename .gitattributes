@@ -1,0 +1,17 @@
+# Third-party libraries; keep language statistics focused on application code.
+WebsiteBanHang/Content/AdminLayout/vendor/** linguist-vendored
+WebsiteBanHang/Content/AdminLayout/css/sb-admin-2* linguist-vendored
+WebsiteBanHang/Content/AdminLayout/js/sb-admin-2* linguist-vendored
+WebsiteBanHang/Content/AdminLayout/scss/** linguist-vendored
+WebsiteBanHang/Content/fontawesome/** linguist-vendored
+WebsiteBanHang/Content/bootstrap* linguist-vendored
+WebsiteBanHang/Content/css/bootstrap5* linguist-vendored
+WebsiteBanHang/Content/js/bootstrap5* linguist-vendored
+WebsiteBanHang/Content/js/jquery.min.js linguist-vendored
+WebsiteBanHang/Scripts/jquery* linguist-vendored
+WebsiteBanHang/Scripts/bootstrap* linguist-vendored
+WebsiteBanHang/Scripts/modernizr* linguist-vendored
+WebsiteBanHang/Scripts/popper* linguist-vendored
+WebsiteBanHang/Scripts/src/** linguist-vendored
+WebsiteBanHang/Scripts/esm/** linguist-vendored
+WebsiteBanHang/Scripts/umd/** linguist-vendored

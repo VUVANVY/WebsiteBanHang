@@ -19,20 +19,14 @@ namespace WebsiteBanHang.Controllers
         // GET: Home/Index
         public ActionResult Index()
         {
-            //Lần lượt tạo các viewbag để lấy list sp từ csdl
-            //List laptop mới
+            // Sản phẩm mới theo từng nhóm trên trang chủ.
             var lstLTM = db.SanPham.Where(n => n.MaLoaiSP == 1 && n.Moi == 1 && n.DaXoa == false).ToList();
-            //Gán vào viewbag
             ViewBag.ListLTM = lstLTM;
 
-            //List PC mới
             var lstPCM = db.SanPham.Where(n => n.MaLoaiSP == 2 && n.Moi == 1 && n.DaXoa == false).ToList();
-            //Gán vào viewbag
             ViewBag.ListPCM = lstPCM;
 
-            //List dt mới
             var lstDTM = db.SanPham.Where(n => n.MaLoaiSP == 7 && n.Moi == 1 && n.DaXoa == false).ToList();
-            //Gán vào viewbag
             ViewBag.ListDTM = lstDTM;
 
             return View();

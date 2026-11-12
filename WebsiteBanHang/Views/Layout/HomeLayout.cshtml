@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MotoShop - Cửa Hàng Xe Máy</title>
+    <title>@ViewBag.Title - MotoShop</title>
     <!-- Bootstrap 5 (local) -->
     <link rel="stylesheet" href="@Url.Content("~/Content/css/bootstrap5.min.css")">
     <!-- FontAwesome 5 (local) -->
@@ -26,10 +26,6 @@
                     <span><i class="fas fa-map-marker-alt me-2"></i>Showroom: 101 Lĩnh Nam, Hoàng Mai, Hà Nội</span>
                 </div>
                 <div class="top-links d-flex gap-3">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <span class="ms-3 text-muted">|</span>
                     @if (User.Identity.IsAuthenticated && User.IsInRole("QuanTriWeb"))
                     {
                         <a href="@Url.Action("Index","ThongKe")" class="ms-2">
@@ -44,7 +40,7 @@
         <div class="header-main py-3 border-bottom shadow-sm bg-white">
             <div class="container d-flex align-items-center justify-content-between">
                 <div class="logo">
-                    <a href="index.html"><img src="~/Content/images/logo.png" alt="logo" height="65"></a>
+                    <a href="@Url.Action("Index", "Home")"><img src="~/Content/images/logo.png" alt="logo" height="65"></a>
                 </div>
                 <!-- Search Bar -->
                 <div class="header-search flex-grow-1 d-none d-md-block" style="max-width: 600px; margin: 0 auto;">
@@ -84,9 +80,7 @@
                                     <i class="far fa-user-circle me-1"></i>Hi, @tv.HoTen
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
-                                    <li><a class="dropdown-item" href="#"><i class="fas fa-id-card me-2"></i>Thông tin hồ sơ</a></li>
                                     
-                                    <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item text-danger" href="@Url.Action("DangXuat","Home")"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
                                 </ul>
                             </div>
@@ -119,10 +113,6 @@
 
                 <ul class="nav main-nav d-none d-lg-flex">
                     <li class="nav-item"><a href="@Url.Action("Index","Home")" class="nav-link text-dark fw-bold py-3 active">TRANG CHỦ</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link text-dark py-3 px-4">TIN TỨC</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link text-dark py-3 px-4">KHUYẾN MÃI</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link text-dark py-3 px-4">VỀ CHÚNG TÔI</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link text-dark py-3 px-4">LIÊN HỆ</a></li>
                 </ul>
             </div>
         </nav>
@@ -149,9 +139,6 @@
                         <div class="mb-3">
                             <label class="form-label"><i class="fas fa-lock me-1"></i>Mật khẩu</label>
                             <input type="password" class="form-control" name="txtMatKhau" placeholder="Nhập mật khẩu" required />
-                        </div>
-                        <div class="mb-3">
-                            <a href="#" class="text-secondary" style="font-size:.8rem;">Quên mật khẩu?</a>
                         </div>
                         <p id="ThongBao" class="text-danger fw-semibold" style="font-size:.875rem;"></p>
                         <button type="submit" class="btn-login-submit">
@@ -229,33 +216,28 @@
             <div class="row g-5">
                 <div class="col-lg-4">
                     <div class="logo">
-                        <a href="index.html"><img src="~/Content/images/logo.png" alt="logo" height="65"></a>
+                        <a href="@Url.Action("Index", "Home")"><img src="~/Content/images/logo.png" alt="logo" height="65"></a>
                     </div>
                     <p>Cửa hàng xe máy uy tín hàng đầu. Nhập khẩu chính hãng, bảo hành toàn quốc, giao xe tận nhà.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
                 </div>
                 <div class="col-lg-2 col-6">
-                    <h5>Danh mục</h5>
+                    <h5>Điều hướng</h5>
                     <ul>
-                        <li><a href="@Url.Action("Index","Home")"><i class="fas fa-chevron-right me-2 fa-xs"></i>Trang chủ</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>Xe tay ga</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>Xe côn tay</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>Xe số</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>Xe điện</a></li>
+                        <li><a href="@Url.Action("Index", "Home")"><i class="fas fa-chevron-right me-2 fa-xs"></i>Trang chủ</a></li>
+                        <li><a href="@Url.Action("XemGioHang", "GioHang")"><i class="fas fa-chevron-right me-2 fa-xs"></i>Giỏ hàng</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-6">
-                    <h5>Hỗ trợ</h5>
+                    <h5>Tài khoản</h5>
                     <ul>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>Hướng dẫn mua</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>Chính sách đổi trả</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>Bảo hành</a></li>
-                        <li><a href="#"><i class="fas fa-chevron-right me-2 fa-xs"></i>FAQ</a></li>
+                        @if (Session["TaiKhoan"] == null)
+                        {
+                            <li><a href="@Url.Action("DangKy", "Home")"><i class="fas fa-chevron-right me-2 fa-xs"></i>Đăng ký</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="@Url.Action("Index", "DonHang")"><i class="fas fa-chevron-right me-2 fa-xs"></i>Đơn hàng</a></li>
+                        }
                     </ul>
                 </div>
                 <div class="col-lg-4">
@@ -263,17 +245,12 @@
                     <div class="contact-item"><i class="fas fa-map-marker-alt"></i><span>101 Lĩnh Nam, Hoàng Mai, Hà Nội</span></div>
                     <div class="contact-item"><i class="fas fa-phone"></i><span>086 529 3813</span></div>
                     <div class="contact-item"><i class="fas fa-envelope"></i><span>vuvanvy@motoshop.vn</span></div>
-                    <h5 class="mt-3">Nhận tin tức</h5>
-                    <div class="newsletter-form">
-                        <input type="email" placeholder="Email của bạn..." />
-                        <button type="button"><i class="fas fa-paper-plane me-1"></i>Gửi</button>
-                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <p>&copy; 2024 MotoShop. Tất cả quyền được bảo lưu.</p>
+                        <p>&copy; @DateTime.Now.Year MotoShop. Tất cả quyền được bảo lưu.</p>
                     </div>
                     <div class="col-md-6 text-md-end">
                         <p><i class="fas fa-shield-alt me-1"></i>Thanh toán an toàn &nbsp;|&nbsp; <i class="fas fa-shipping-fast me-1"></i>Giao hàng toàn quốc</p>

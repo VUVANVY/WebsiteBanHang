@@ -10,11 +10,10 @@ Website bán xe máy với giao diện khách hàng và trang quản trị.
 
 ## Chức năng
 
-- Đăng ký, đăng nhập và phân quyền người dùng.
-- Tìm kiếm, lọc sản phẩm theo loại và hãng, phân trang danh sách.
-- Quản lý giỏ hàng, đặt hàng, theo dõi đơn và xuất hóa đơn PDF.
-- Quản trị sản phẩm, hình ảnh, danh mục, nhà sản xuất và thành viên.
-- Nhập hàng, theo dõi tồn kho, trạng thái giao hàng và thống kê doanh thu.
+| Phần | Chức năng |
+| --- | --- |
+| Khách hàng | Đăng ký, đăng nhập; tìm kiếm, lọc và phân trang sản phẩm; giỏ hàng, đặt hàng, theo dõi đơn và xuất hóa đơn PDF. |
+| Quản trị | Quản lý sản phẩm, hình ảnh, danh mục, hãng, thành viên và quyền; nhập hàng, theo dõi tồn kho, xử lý đơn và thống kê doanh thu. |
 
 ## Cài đặt
 
@@ -25,6 +24,8 @@ Yêu cầu Windows, Visual Studio có **ASP.NET and web development**, .NET Fram
 3. Cập nhật kết nối `QuanLyBanHangEntities` trong `WebsiteBanHang/Web.config` theo SQL Server trên máy.
 4. Chọn `WebsiteBanHang` làm startup project, build và nhấn **F5** để chạy bằng IIS Express.
 
-Database đi kèm có dữ liệu sản phẩm mẫu; tài khoản được tạo khi sử dụng ứng dụng.
+Database đi kèm có dữ liệu sản phẩm mẫu. Tài khoản khách tạo qua trang đăng ký; tài khoản quản trị được tạo theo [hướng dẫn triển khai](deployment/README.md).
 
-Xem thêm [hướng dẫn triển khai trên IIS](deployment/README.md).
+## Kiểm tra
+
+Sau khi publish, chạy `.\tools\Test-Deployment.ps1` để kiểm tra đăng nhập, phân quyền, giỏ hàng, đơn hàng và hóa đơn. Cần IIS Express và SQL Server Express cục bộ; script sử dụng database tạm riêng.
