@@ -317,6 +317,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\css\bootstrap.css" />
+    <Content Include="Content\css\bootstrap5.min.css" />
     <Content Include="Content\css\flexslider.css" />
     <Content Include="Content\css\Home_style.css" />
     <Content Include="Content\css\memenu.css" />
@@ -351,6 +352,7 @@
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\suzuki.jpg" />
     <Content Include="Content\images\yamaha.jpg" />
+    <Content Include="Content\js\bootstrap5.bundle.min.js" />
     <Content Include="Content\js\jquery.flexslider.js" />
     <Content Include="Content\js\jquery.min.js" />
     <Content Include="Content\js\main.js" />
