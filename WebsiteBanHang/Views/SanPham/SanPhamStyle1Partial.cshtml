@@ -37,7 +37,7 @@
                         <div class="moto-card-img-wrap">
                             <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })">
                                 <img src="@Url.Content("~/Content/HinhAnhSP/" + item.HinhAnh)"
-                                     alt="@item.TenSP" />
+                                     alt="@item.TenSP" loading="lazy" decoding="async" />
                             </a>
                             @if (item.Moi == 1)
                             {

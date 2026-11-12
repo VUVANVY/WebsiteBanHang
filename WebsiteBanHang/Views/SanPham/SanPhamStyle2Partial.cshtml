@@ -30,7 +30,7 @@
             <div class="moto-card moto-card-featured">
                 <div class="moto-card-img-wrap">
                     <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[0].MaSP, @tensp = items[0].TenSP })">
-                        <img src="@Url.Content("~/Content/HinhAnhSP/" + items[0].HinhAnh)" alt="@items[0].TenSP" />
+                        <img src="@Url.Content("~/Content/HinhAnhSP/" + items[0].HinhAnh)" alt="@items[0].TenSP" loading="lazy" decoding="async" />
                     </a>
                     <span class="badge-featured"><i class="fas fa-star me-1"></i>Nổi bật</span>
                 </div>
@@ -71,7 +71,7 @@
                             <div class="moto-card">
                                 <div class="moto-card-img-wrap">
                                     <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[i].MaSP, @tensp = items[i].TenSP })">
-                                        <img src="@Url.Content("~/Content/HinhAnhSP/" + items[i].HinhAnh)" alt="@items[i].TenSP" />
+                                        <img src="@Url.Content("~/Content/HinhAnhSP/" + items[i].HinhAnh)" alt="@items[i].TenSP" loading="lazy" decoding="async" />
                                     </a>
                                 </div>
                                 <div class="moto-card-body">

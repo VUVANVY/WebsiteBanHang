@@ -92,10 +92,31 @@ function Send-TestRequest {
         $response = $_.Exception.Response
     }
     try {
-        $reader = [IO.StreamReader]::new($response.GetResponseStream())
-        try { $content = $reader.ReadToEnd() } finally { $reader.Dispose() }
-        return [pscustomobject]@{ Status = [int]$response.StatusCode; Content = $content; Location = $response.Headers['Location'] }
+        $bodyBuffer = [IO.MemoryStream]::new()
+        try {
+            $response.GetResponseStream().CopyTo($bodyBuffer)
+            $responseBytes = $bodyBuffer.ToArray()
+        } finally { $bodyBuffer.Dispose() }
+        return [pscustomobject]@{
+            Status = [int]$response.StatusCode
+            Content = [Text.Encoding]::UTF8.GetString($responseBytes)
+            Bytes = $responseBytes
+            ContentType = $response.ContentType
+            Location = $response.Headers['Location']
+        }
     } finally { if ($response) { $response.Dispose() } }
+}
+
+function Test-ImageSignature {
+    param([byte[]]$Bytes)
+    if ($null -eq $Bytes -or $Bytes.Length -lt 12) { return $false }
+    $prefix = [BitConverter]::ToString($Bytes, 0, 12)
+    return $prefix.StartsWith('FF-D8-FF') -or
+        $prefix.StartsWith('89-50-4E-47-0D-0A-1A-0A') -or
+        $prefix.StartsWith('47-49-46-38-37-61') -or
+        $prefix.StartsWith('47-49-46-38-39-61') -or
+        $prefix.StartsWith('42-4D') -or
+        ($prefix.StartsWith('52-49-46-46') -and [BitConverter]::ToString($Bytes, 8, 4) -eq '57-45-42-50')
 }
 
 function Get-TestToken {
@@ -203,6 +224,41 @@ SELECT @order;
         catch [System.Net.WebException] { Start-Sleep -Milliseconds 500 }
     }
     Assert-Check ($homepageResult -and $homepageResult.Status -eq 200 -and $homepageResult.Content.Contains('MotoShop')) 'published Razor homepage renders HTTP 200'
+    $bootstrapCss = Send-TestRequest -Path '/Content/css/bootstrap5.min.css' -Session $anonymous
+    Assert-Check ($bootstrapCss.Status -eq 200 -and $bootstrapCss.ContentType -match '^text/css\b' -and
+        $bootstrapCss.Content -match '\bBootstrap\s+v5\.' -and $bootstrapCss.Content.Contains('--bs-')) 'published Bootstrap CSS is served as CSS with Bootstrap content'
+    $bootstrapJs = Send-TestRequest -Path '/Content/js/bootstrap5.bundle.min.js' -Session $anonymous
+    Assert-Check ($bootstrapJs.Status -eq 200 -and $bootstrapJs.ContentType -match '^(application|text)/(javascript|x-javascript|ecmascript)\b' -and
+        $bootstrapJs.Content -match '\bBootstrap\s+v5\.' -and $bootstrapJs.Content.Contains('data-bs-')) 'published Bootstrap bundle is served as JavaScript with Bootstrap content'
+    foreach ($layoutImagePath in '/Content/images/logo.png', '/Content/images/hero-main.jpg', '/Content/images/hero-banner-1.jpg', '/Content/images/hero-banner-2.jpg') {
+        $layoutImage = Send-TestRequest -Path $layoutImagePath -Session $anonymous
+        Assert-Check ($layoutImage.Status -eq 200 -and $layoutImage.ContentType -match '^image/' -and
+            (Test-ImageSignature -Bytes $layoutImage.Bytes)) ('published layout image is served as an image: ' + $layoutImagePath)
+    }
+
+    $imageQuery = @'
+SELECT CONVERT(nvarchar(max), (SELECT ImageName AS [text()]
+FROM (
+    SELECT HinhAnh AS ImageName FROM dbo.SanPham
+    UNION SELECT HinhAnh1 FROM dbo.SanPham
+    UNION SELECT HinhAnh2 FROM dbo.SanPham
+    UNION SELECT HinhAnh3 FROM dbo.SanPham
+    UNION SELECT HinhAnh4 FROM dbo.SanPham
+) AS ProductImages
+WHERE ImageName IS NOT NULL AND LEN(ImageName) > 0
+ORDER BY ImageName
+FOR XML PATH('image'), ROOT('images'), TYPE));
+'@
+    [xml]$imageList = [string](Invoke-TestSql -Sql $imageQuery -Scalar)
+    $imageNodes = @($imageList.SelectNodes('/images/image'))
+    Assert-Check ($imageNodes.Count -gt 0) 'seeded product image references are available for runtime checks'
+    foreach ($imageNode in $imageNodes) {
+        $imageName = $imageNode.InnerText
+        $imagePath = '/Content/HinhAnhSP/' + [uri]::EscapeDataString($imageName)
+        $imageResponse = Send-TestRequest -Path $imagePath -Session $anonymous
+        Assert-Check ($imageResponse.Status -eq 200 -and $imageResponse.ContentType -match '^image/' -and
+            (Test-ImageSignature -Bytes $imageResponse.Bytes)) ('published product image is served as an image: ' + $imageName)
+    }
     foreach ($path in '/Home/PhanQuyen?Taikhoan=forged&Quyen=QuanTriWeb', '/ThongKe/PhanQuyen?Taikhoan=forged&Quyen=QuanTriWeb') {
         Assert-Check ((Send-TestRequest -Path $path -Session $anonymous).Status -eq 404) 'role-ticket helper cannot be routed'
     }
