@@ -167,9 +167,9 @@ $seed.LoaiThanhVien = @(
 )
 $seed.NhaCungCap = @(@{ MaNCC = 1; TenNCC = 'Nhà cung cấp demo'; DiaChi = $null; Email = $null; SoDienThoai = $null; Fax = $null })
 $seed.NhaSanXuat = @(
-    @{ MaNSX = 1; TenNSX = 'Hãng demo A'; ThongTin = 'Thông tin minh họa cho bản demo CV.' },
-    @{ MaNSX = 2; TenNSX = 'Hãng demo B'; ThongTin = 'Thông tin minh họa cho bản demo CV.' },
-    @{ MaNSX = 3; TenNSX = 'Hãng demo C'; ThongTin = 'Thông tin minh họa cho bản demo CV.' }
+    @{ MaNSX = 1; TenNSX = 'Hãng demo A'; ThongTin = 'Thông tin nhà sản xuất mẫu.' },
+    @{ MaNSX = 2; TenNSX = 'Hãng demo B'; ThongTin = 'Thông tin nhà sản xuất mẫu.' },
+    @{ MaNSX = 3; TenNSX = 'Hãng demo C'; ThongTin = 'Thông tin nhà sản xuất mẫu.' }
 )
 $seed.Quyen = @(
     @{ MaQuyen = 'QuanTriWeb'; TenQuyen = 'Quản trị website' },
@@ -191,7 +191,7 @@ for ($i = 1; $i -le 13; $i++) {
     $products += @{
         MaSP = $i; TenSP = ('[DEMO] ' + $label + ' ' + $i.ToString('00'))
         DonGia = [decimal](18000000 + $i * 3500000); NgayCapNhat = '2026-01-01T00:00:00'
-        DongCo = 'Thông số minh họa cho bản demo CV.'
+        DongCo = 'Thông số kỹ thuật mẫu.'
         MoTa = '<p>Sản phẩm và giá hoàn toàn là dữ liệu demo. Hình ảnh chỉ dùng minh họa; website không phục vụ giao dịch thật.</p>'
         HinhAnh = $image; HinhAnh1 = $image; HinhAnh2 = $image; HinhAnh3 = $image; HinhAnh4 = $image
         SoLuongTon = 10; LuotXem = 0; LuotBinhChon = 0; LuotBinhLuan = 0; SoLuotMua = 0; Moi = 1
