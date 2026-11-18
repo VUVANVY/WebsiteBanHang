@@ -22,6 +22,8 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.MaSP)
+                @Html.Hidden("id", Model.MaSP)
+                @Html.ValidationSummary(false, "", new { @class = "text-danger", role = "alert" })
 
                 <!-- ================= PREVIEW HÌNH HIỆN TẠI ================= -->
                 <div class="row g-4 mb-5">

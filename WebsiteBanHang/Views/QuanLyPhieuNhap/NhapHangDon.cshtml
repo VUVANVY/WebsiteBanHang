@@ -63,6 +63,8 @@
 
             @using (Html.BeginForm("NhapHangDon", "QuanLyPhieuNhap", FormMethod.Post))
             {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
                 @Html.Hidden("MaSP", Model.MaSP)
 
                 <div class="row g-4 mt-2">

@@ -247,6 +247,10 @@
             })
                 .then(res => res.json())
                 .then(data => {
+                    if (!data.success) {
+                        window.alert(data.message || "Chưa thêm được sản phẩm vào giỏ hàng.");
+                        return;
+                    }
                     if (data.success) {
 
                         var toast = document.getElementById("cartToast");
@@ -263,6 +267,9 @@
                             setTimeout(() => badge.classList.remove("bump"), 300);
                         }
                     }
+                })
+                .catch(function () {
+                    window.alert("Chưa kết nối được giỏ hàng. Vui lòng thử lại.");
                 });
         });
     </script>

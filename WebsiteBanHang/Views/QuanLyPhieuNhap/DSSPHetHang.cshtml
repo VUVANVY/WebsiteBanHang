@@ -18,6 +18,7 @@
                 Danh sách sản phẩm có tồn kho thấp
             </small>
         </div>
+        <a class="btn btn-primary" href="@Url.Action("NhapHang")">Nhập nhiều sản phẩm</a>
     </div>
 
     <!-- CARD -->
@@ -27,7 +28,7 @@
             <div class="mb-3 fw-semibold">
                 Tổng:
                 <span class="text-danger fs-5">
-                    @Model.Count()
+                    @Model.TotalItemCount
                 </span> sản phẩm
             </div>
 

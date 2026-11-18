@@ -43,6 +43,10 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.MaThanhVien)
+                if (!ViewData.ModelState.IsValid)
+                {
+                    @Html.ValidationSummary(false, "Vui lòng kiểm tra lại thông tin thành viên.", new { @class = "alert alert-danger", role = "alert" })
+                }
 
                 <!-- ===== TÀI KHOẢN ===== -->
                 <h5 class="fw-bold text-primary mb-4 border-bottom pb-2">

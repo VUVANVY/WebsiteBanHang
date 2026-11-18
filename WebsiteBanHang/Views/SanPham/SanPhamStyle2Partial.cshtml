@@ -42,7 +42,10 @@
                         </a>
                     </h5>
                     <div class="card-price-row">
-                        <span class="card-price">@items[0].DonGia.Value.ToString("#,##") <small>VNĐ</small></span>
+                        <span class="card-price">
+                            @(items[0].DonGia.HasValue ? items[0].DonGia.GetValueOrDefault().ToString("#,##0") : "Chưa cập nhật giá")
+                            @if (items[0].DonGia.HasValue) { <small>VNĐ</small> }
+                        </span>
                     </div>
                     <div class="card-actions">
                         <a href="@Url.RouteUrl("XemChiTiet", new { @id = items[0].MaSP, @tensp = items[0].TenSP })"
@@ -81,7 +84,7 @@
                                             @(items[i].TenSP.Length > 28 ? items[i].TenSP.Substring(0, 28) + "…" : items[i].TenSP)
                                         </a>
                                     </h6>
-                                    <span class="card-price card-price-sm">@items[i].DonGia.Value.ToString("#,##") VNĐ</span>
+                                    <span class="card-price card-price-sm">@(items[i].DonGia.HasValue ? items[i].DonGia.GetValueOrDefault().ToString("#,##0") + " VNĐ" : "Chưa cập nhật giá")</span>
                                 </div>
                             </div>
                         </div>

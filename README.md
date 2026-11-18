@@ -30,4 +30,4 @@ Database đi kèm có dữ liệu sản phẩm mẫu. Tài khoản khách tạo 
 
 ## Kiểm tra
 
-Sau khi publish, chạy `.\tools\Test-Deployment.ps1` để kiểm tra đăng nhập, phân quyền, giỏ hàng, đơn hàng và hóa đơn. Cần IIS Express và SQL Server Express cục bộ; script sử dụng database tạm riêng.
+Sau khi publish, chạy `.\tools\Test-Deployment.ps1` để kiểm tra sản phẩm, tìm kiếm, hình ảnh, đăng nhập, giỏ hàng, đơn hàng, hóa đơn và các thao tác quản trị. Cần IIS Express và SQL Server Express cục bộ; script sử dụng database tạm riêng.

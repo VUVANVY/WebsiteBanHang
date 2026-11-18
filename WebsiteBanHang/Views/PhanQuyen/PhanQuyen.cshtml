@@ -3,59 +3,31 @@
 @{
     ViewBag.Title = "Phân quyền thành viên";
     Layout = "~/Views/Layout/AdminLayout.cshtml";
+    var permissions = (IEnumerable<Quyen>)ViewBag.MaQuyen;
+    var assigned = (IEnumerable<LoaiThanhVien_Quyen>)ViewBag.LoaiTVQuyen;
+    var selected = new HashSet<string>(assigned.Select(role => role.MaQuyen), StringComparer.OrdinalIgnoreCase);
 }
 
-<h4>@Html.ActionLink("Phân quyền thành viên", "Index") > Phân quyền</h4>
+<h4>@Html.ActionLink("Phân quyền thành viên", "Index") &gt; Phân quyền</h4>
 <div class="card">
     <div class="card-body">
         <h2>Loại thành viên: @Model.TenLoai</h2>
-        @{
-            IEnumerable<Quyen> lstQuyen = (IEnumerable<Quyen>)ViewBag.MaQuyen;
-            IEnumerable<LoaiThanhVien_Quyen> lstLTVQuyen = (IEnumerable<LoaiThanhVien_Quyen>)ViewBag.LoaiTVQuyen;
-        }
-        @using (Html.BeginForm())
+        @using (Html.BeginForm("PhanQuyen", "PhanQuyen", FormMethod.Post))
         {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
             @Html.Hidden("MaLTV", Model.MaLoaiTV)
-            if (lstLTVQuyen != null)
-            {
-                for (int j = 0; j < lstQuyen.Count(); j++)
+            <div class="row">
+                @foreach (var permission in permissions)
                 {
-                    int k = 0;  //tạo biến k làm biến đếm để duyệt vòng lặp của bảng quyền xem nếu loại tv nào có mã quyền ứng vs quyền
-                    for (int i = 0; i < lstLTVQuyen.Count(); i++)
-                    {   //ss giữa item trong bảng quyen và item trong bảng loaitvquyen vs MaQuyen
-                        if (lstQuyen.ElementAt(j).MaQuyen == lstLTVQuyen.ElementAt(i).MaQuyen)
-                        {
-                            k++;
-                            break;
-                        }
-                    }
-                    if (k != 0)
-                    {
-                        <div class="col-md-4" style="font-size:15pt;">
-                            <input class="ckb_Click" checked="checked" type="checkbox" style="height:1em; width:1em;" name="@Url.Content("["+j+"].MaQuyen")" value="@lstQuyen.ElementAt(j).MaQuyen" />
-                            @lstQuyen.ElementAt(j).MaQuyen
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="col-md-4" style="font-size:15pt;">
-                            <input class="ckb_Click" type="checkbox" style="height:1em; width:1em;" name="@Url.Content("["+j+"].MaQuyen")" value="@lstQuyen.ElementAt(j).MaQuyen" />
-                            @lstQuyen.ElementAt(j).TenQuyen
-                        </div>
-                    }
-                    k = 0;
+                    <label class="col-md-4" style="font-size:15pt;">
+                        <input type="checkbox" style="height:1em;width:1em;"
+                               name="selectedPermissions" value="@permission.MaQuyen"
+                               checked="@(selected.Contains(permission.MaQuyen) ? "checked" : null)" />
+                        @(string.IsNullOrWhiteSpace(permission.TenQuyen) ? permission.MaQuyen : permission.TenQuyen)
+                    </label>
                 }
-            }
-            else
-            {   //đối vs loại tv chưa phân quyền
-                for (int i = 0; i < lstQuyen.Count(); i++)
-                {
-                    <div class="col-md-4" style="font-size:12pt;">
-                        <input class="ckb_Click" type="checkbox" style="height:1em; width:1em;" name="@Url.Content("["+i+"].MaQuyen")" value="@lstQuyen.ElementAt(i).MaQuyen" />
-                        @lstQuyen.ElementAt(i).TenQuyen
-                    </div>
-                }
-            }
+            </div>
             <div class="form-group row mt-3">
                 <div class="col-sm-4">
                     <input type="submit" value="Thực hiện" class="btn btn-sm btn-primary font-weight-bold w-25" />
@@ -65,16 +37,3 @@
         }
     </div>
 </div>
-@* Hàm jquery duyệt lại checkbox đã đc check *@
-<script>
-    $(".ckb_Click").click(function () {
-        i = 0;
-        $(".ckb_Click").each(function () {
-            if ($(this).is(':checked'))
-            {
-                $(this).attr("name", "[" + i + "].MaQuyen");
-                i++
-            }
-        })
-    })
-</script>

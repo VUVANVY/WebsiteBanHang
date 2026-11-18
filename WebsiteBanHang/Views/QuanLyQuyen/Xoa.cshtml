@@ -7,7 +7,8 @@
 <h4>@Html.ActionLink("Quản lý quyền", "Index") > Xóa</h4>
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title">Thông tin sản phẩm</h4>
+        <h4 class="card-title">Thông tin quyền</h4>
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <hr />
 
         <div class="row ">
@@ -26,6 +27,7 @@
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
+                    @Html.Hidden("id", Model.MaQuyen)
                     <input type="submit" value="Xóa" class="btn btn-sm btn-primary font-weight-bold w-25" />
                     @Html.ActionLink("Trở về", "Index", null, htmlAttributes: new { @class = "btn btn-sm btn-secondary font-weight-bold w-25" })
                 }

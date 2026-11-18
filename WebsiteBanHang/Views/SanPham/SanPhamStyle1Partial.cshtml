@@ -52,7 +52,10 @@
                                 </a>
                             </h6>
                             <div class="card-price-row">
-                                <span class="card-price">@item.DonGia.Value.ToString("#,##") <small>VNĐ</small></span>
+                                <span class="card-price">
+                                    @(item.DonGia.HasValue ? item.DonGia.GetValueOrDefault().ToString("#,##0") : "Chưa cập nhật giá")
+                                    @if (item.DonGia.HasValue) { <small>VNĐ</small> }
+                                </span>
                             </div>
                             <div class="card-actions">
                                 <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })"

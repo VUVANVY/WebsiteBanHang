@@ -35,19 +35,28 @@ namespace WebsiteBanHang.Controllers
         [HttpPost]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult TaoMoi(SanPham sp,
+        public ActionResult TaoMoi([Bind(Include = "TenSP,DonGia,DongCo,MoTa,SoLuongTon,LuotXem,MaNCC,MaLoaiSP,MaNSX,Moi")] SanPham sp,
             HttpPostedFileBase HinhAnh,
             HttpPostedFileBase HinhAnh1,
             HttpPostedFileBase HinhAnh2,
             HttpPostedFileBase HinhAnh3,
             HttpPostedFileBase HinhAnh4)
         {
+            sp = sp ?? new SanPham();
             LoadDropdown(sp);
+            ValidateProduct(sp);
+            if (!ModelState.IsValid)
+                return View(sp);
 
             try
             {
                 sp.DaXoa = false;
                 sp.NgayCapNhat = DateTime.Now;
+                sp.Moi = sp.Moi == 1 ? 1 : 0;
+                sp.LuotXem = sp.LuotXem ?? 0;
+                sp.LuotBinhChon = 0;
+                sp.LuotBinhLuan = 0;
+                sp.SoLuotMua = 0;
 
                 SaveImages(sp, HinhAnh, HinhAnh1, HinhAnh2, HinhAnh3, HinhAnh4);
 
@@ -57,9 +66,9 @@ namespace WebsiteBanHang.Controllers
                 TempData["Success"] = "Thêm sản phẩm thành công!";
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                TempData["Error"] = "Thêm sản phẩm thất bại! " + ex.Message;
+                ModelState.AddModelError("", "Chưa lưu được sản phẩm. Vui lòng kiểm tra thông tin và quyền ghi thư mục hình ảnh rồi thử lại.");
                 return View(sp);
             }
         }
@@ -69,7 +78,7 @@ namespace WebsiteBanHang.Controllers
         public ActionResult ChinhSua(int? id)
         {
             if (id == null)
-                return new HttpStatusCodeResult(400);
+                return HttpNotFound();
 
             SanPham sp = db.SanPham.Find(id);
 
@@ -84,24 +93,32 @@ namespace WebsiteBanHang.Controllers
         [HttpPost]
         [ValidateInput(false)]
         [ValidateAntiForgeryToken]
-        public ActionResult ChinhSua(SanPham sp)
+        public ActionResult ChinhSua([Bind(Include = "MaSP,TenSP,DonGia,DongCo,MoTa,SoLuongTon,LuotXem,MaNCC,MaLoaiSP,MaNSX,Moi")] SanPham sp)
         {
+            if (sp == null || sp.MaSP <= 0)
+                return HttpNotFound();
+
+            SanPham sanPham = db.SanPham.Find(sp.MaSP);
+            if (sanPham == null)
+                return HttpNotFound();
+
+            LoadDropdown(sp);
+            ValidateProduct(sp);
+            if (!ModelState.IsValid)
+                return View(sanPham);
+
             try
             {
-                SanPham sanPham = db.SanPham.Find(sp.MaSP);
-                if (sanPham == null)
-                    return HttpNotFound();
-
                 sanPham.TenSP = sp.TenSP;
                 sanPham.DonGia = sp.DonGia;
                 sanPham.DongCo = sp.DongCo;
                 sanPham.MoTa = sp.MoTa;
                 sanPham.SoLuongTon = sp.SoLuongTon;
-                sanPham.LuotXem = sp.LuotXem;
+                sanPham.LuotXem = sp.LuotXem ?? 0;
                 sanPham.MaNCC = sp.MaNCC;
                 sanPham.MaLoaiSP = sp.MaLoaiSP;
                 sanPham.MaNSX = sp.MaNSX;
-                sanPham.Moi = sp.Moi;
+                sanPham.Moi = sp.Moi == 1 ? 1 : 0;
                 sanPham.NgayCapNhat = DateTime.Now;
 
                 db.SaveChanges();
@@ -109,11 +126,10 @@ namespace WebsiteBanHang.Controllers
                 TempData["Success"] = "Cập nhật thành công!";
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                TempData["Error"] = "Cập nhật thất bại! " + ex.Message;
-                LoadDropdown(sp);
-                return View(sp);
+                ModelState.AddModelError("", "Chưa cập nhật được sản phẩm. Vui lòng kiểm tra thông tin và thử lại.");
+                return View(sanPham);
             }
         }
 
@@ -122,7 +138,7 @@ namespace WebsiteBanHang.Controllers
         public ActionResult UploadHinh(int? id)
         {
             if (id == null)
-                return new HttpStatusCodeResult(400);
+                return HttpNotFound();
 
             SanPham sp = db.SanPham.Find(id);
 
@@ -135,19 +151,22 @@ namespace WebsiteBanHang.Controllers
         // ================= UPLOAD HÌNH (POST) =================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UploadHinh(int id,
+        public ActionResult UploadHinh(int? id,
             HttpPostedFileBase HinhAnh,
             HttpPostedFileBase HinhAnh1,
             HttpPostedFileBase HinhAnh2,
             HttpPostedFileBase HinhAnh3,
             HttpPostedFileBase HinhAnh4)
         {
+            if (!id.HasValue || id.Value <= 0)
+                return HttpNotFound();
+
+            SanPham sp = db.SanPham.Find(id.Value);
+            if (sp == null)
+                return HttpNotFound();
+
             try
             {
-                SanPham sp = db.SanPham.Find(id);
-                if (sp == null)
-                    return HttpNotFound();
-
                 SaveImages(sp, HinhAnh, HinhAnh1, HinhAnh2, HinhAnh3, HinhAnh4);
 
                 db.SaveChanges();
@@ -155,21 +174,24 @@ namespace WebsiteBanHang.Controllers
                 TempData["Success"] = "Cập nhật hình ảnh thành công!";
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                TempData["Error"] = "Upload hình thất bại! " + ex.Message;
-                return RedirectToAction("Index");
+                ModelState.AddModelError("", "Chưa lưu được hình ảnh. Vui lòng kiểm tra quyền ghi thư mục hình ảnh rồi thử lại.");
+                return View(sp);
             }
         }
 
         // ================= XÓA (SOFT DELETE) =================
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Xoa(int id)
+        public ActionResult Xoa(int? id)
         {
+            if (!id.HasValue || id.Value <= 0)
+                return HttpNotFound();
+
             try
             {
-                SanPham sp = db.SanPham.Find(id);
+                SanPham sp = db.SanPham.Find(id.Value);
                 if (sp == null)
                     return HttpNotFound();
 
@@ -178,12 +200,38 @@ namespace WebsiteBanHang.Controllers
 
                 TempData["Success"] = "Xóa sản phẩm thành công!";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                TempData["Error"] = "Xóa thất bại! " + ex.Message;
+                TempData["Error"] = "Chưa xóa được sản phẩm. Vui lòng thử lại.";
             }
 
             return RedirectToAction("Index");
+        }
+
+        private void ValidateProduct(SanPham sp)
+        {
+            sp.TenSP = (sp.TenSP ?? string.Empty).Trim();
+            if (sp.TenSP.Length == 0)
+                ModelState.AddModelError("TenSP", "Vui lòng nhập tên sản phẩm.");
+            else if (sp.TenSP.Length > 250)
+                ModelState.AddModelError("TenSP", "Tên sản phẩm không được vượt quá 250 ký tự.");
+
+            if (!sp.DonGia.HasValue)
+                ModelState.AddModelError("DonGia", "Vui lòng nhập đơn giá.");
+            else if (sp.DonGia.Value < 0 || sp.DonGia.Value > 999999999999999999m || decimal.Truncate(sp.DonGia.Value) != sp.DonGia.Value)
+                ModelState.AddModelError("DonGia", "Đơn giá phải là số nguyên VNĐ không âm và không vượt quá 18 chữ số.");
+
+            if (!sp.SoLuongTon.HasValue || sp.SoLuongTon.Value < 0)
+                ModelState.AddModelError("SoLuongTon", "Số lượng tồn phải là số nguyên không âm.");
+            if (sp.LuotXem.HasValue && sp.LuotXem.Value < 0)
+                ModelState.AddModelError("LuotXem", "Lượt xem phải là số nguyên không âm.");
+
+            if (!sp.MaNCC.HasValue || !db.NhaCungCap.Any(n => n.MaNCC == sp.MaNCC.Value))
+                ModelState.AddModelError("MaNCC", "Vui lòng chọn nhà cung cấp hợp lệ.");
+            if (!sp.MaLoaiSP.HasValue || !db.LoaiSanPham.Any(n => n.MaLoaiSP == sp.MaLoaiSP.Value))
+                ModelState.AddModelError("MaLoaiSP", "Vui lòng chọn loại sản phẩm hợp lệ.");
+            if (!sp.MaNSX.HasValue || !db.NhaSanXuat.Any(n => n.MaNSX == sp.MaNSX.Value))
+                ModelState.AddModelError("MaNSX", "Vui lòng chọn nhà sản xuất hợp lệ.");
         }
 
         // ================= HÀM LƯU HÌNH =================
@@ -195,6 +243,7 @@ namespace WebsiteBanHang.Controllers
             HttpPostedFileBase HinhAnh4)
         {
             string path = Server.MapPath("~/Content/HinhAnhSP/");
+            Directory.CreateDirectory(path);
 
             if (HinhAnh != null && HinhAnh.ContentLength > 0)
             {

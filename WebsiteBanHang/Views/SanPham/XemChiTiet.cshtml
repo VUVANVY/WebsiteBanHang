@@ -1,6 +1,7 @@
 ﻿@model WebsiteBanHang.Models.SanPham
 @{
     ViewBag.Title = Model.TenSP;
+    var mainImage = !string.IsNullOrWhiteSpace(Model.HinhAnh1) ? Model.HinhAnh1 : Model.HinhAnh;
 }
 
 <!-- Breadcrumb -->
@@ -22,7 +23,7 @@
             <!-- Ảnh chính -->
             <div class="product-main-img mb-3">
                 <img id="mainImg"
-                     src="@Url.Content("~/Content/HinhAnhSP/" + Model.HinhAnh1)"
+                     src="@Url.Content("~/Content/HinhAnhSP/" + mainImage)"
                      alt="@Model.TenSP"
                      class="img-fluid rounded-3"
                      style="width:100%;object-fit:cover;max-height:380px;cursor:zoom-in;" />
@@ -72,7 +73,10 @@
             <!-- Giá -->
             <div class="product-price-box mb-4">
                 <span class="product-price-label">Giá bán:</span>
-                <span class="product-price-value">@Model.DonGia.Value.ToString("#,##") <span>VNĐ</span></span>
+                <span class="product-price-value">
+                    @(Model.DonGia.HasValue ? Model.DonGia.GetValueOrDefault().ToString("#,##0") : "Chưa cập nhật giá")
+                    @if (Model.DonGia.HasValue) { <span>VNĐ</span> }
+                </span>
             </div>
 
             <!-- Giới thiệu summary -->
@@ -139,7 +143,7 @@
                         <tr><th style="background:#f8f9fa;">Dòng xe</th><td>@(Model.LoaiSanPham != null ? Model.LoaiSanPham.TenLoai : "Xe máy")</td></tr>
                         <tr><th style="background:#f8f9fa;">Màu sắc</th><td>Xanh, Đen, Đỏ, Trắng</td></tr>
                         <tr><th style="background:#f8f9fa;">Phân khối</th><td>50cc, 110cc, 125cc, 150cc</td></tr>
-                        <tr><th style="background:#f8f9fa;">Giá bán</th><td><strong>@Model.DonGia.Value.ToString("#,##") VNĐ</strong></td></tr>
+                        <tr><th style="background:#f8f9fa;">Giá bán</th><td><strong>@(Model.DonGia.HasValue ? Model.DonGia.GetValueOrDefault().ToString("#,##0") + " VNĐ" : "Chưa cập nhật giá")</strong></td></tr>
                     </tbody>
                 </table>
             </div>

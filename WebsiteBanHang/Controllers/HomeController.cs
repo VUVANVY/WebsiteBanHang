@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
 using WebsiteBanHang.Models;
@@ -20,13 +21,17 @@ namespace WebsiteBanHang.Controllers
         public ActionResult Index()
         {
             // Sản phẩm mới theo từng nhóm trên trang chủ.
-            var lstLTM = db.SanPham.Where(n => n.MaLoaiSP == 1 && n.Moi == 1 && n.DaXoa == false).ToList();
+            var products = db.SanPham
+                .Include(n => n.LoaiSanPham)
+                .Include(n => n.NhaSanXuat)
+                .Where(n => n.Moi == 1 && n.DaXoa == false);
+            var lstLTM = products.Where(n => n.MaLoaiSP == 1).ToList();
             ViewBag.ListLTM = lstLTM;
 
-            var lstPCM = db.SanPham.Where(n => n.MaLoaiSP == 2 && n.Moi == 1 && n.DaXoa == false).ToList();
+            var lstPCM = products.Where(n => n.MaLoaiSP == 2).ToList();
             ViewBag.ListPCM = lstPCM;
 
-            var lstDTM = db.SanPham.Where(n => n.MaLoaiSP == 7 && n.Moi == 1 && n.DaXoa == false).ToList();
+            var lstDTM = products.Where(n => n.MaLoaiSP == 7).ToList();
             ViewBag.ListDTM = lstDTM;
 
             return View();
@@ -35,7 +40,11 @@ namespace WebsiteBanHang.Controllers
         public ActionResult MenuPartial()
         {
             //Lấy ra 1 lst sanpham và truyền trực tiếp vào partial
-            var lstSP = db.SanPham.ToList();
+            var lstSP = db.SanPham
+                .Include(n => n.LoaiSanPham)
+                .Include(n => n.NhaSanXuat)
+                .Where(n => n.DaXoa == false)
+                .ToList();
 
             return PartialView(lstSP);
         }

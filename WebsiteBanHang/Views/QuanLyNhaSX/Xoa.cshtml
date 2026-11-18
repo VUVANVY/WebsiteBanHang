@@ -4,10 +4,11 @@
     Layout = "~/Views/Layout/AdminLayout.cshtml";
 }
 
-<<h4>@Html.ActionLink("Quản lý nhà SX", "Index") > Xóa</h4>
+<h4>@Html.ActionLink("Quản lý nhà SX", "Index") > Xóa</h4>
 <div class="card shadow">
     <div class="card-body">
         <h4 class="card-title">Thông tin nhà sản xuất</h4>
+        @Html.ValidationSummary(false, "", new { @class = "text-danger", role = "alert" })
         <hr />
         <div class="row ">
             <label class="col-sm-2 col-form-label font-weight-bold">@Html.DisplayNameFor(model => model.MaNSX)</label>
@@ -27,6 +28,7 @@
                 @using (Html.BeginForm())
                 {
                     @Html.AntiForgeryToken()
+                    @Html.Hidden("id", Model.MaNSX)
                     <input type="submit" value="Xóa" class="btn btn-sm btn-primary font-weight-bold w-25" />
                     @Html.ActionLink("Trở về", "Index", null, htmlAttributes: new { @class = "btn btn-sm btn-secondary font-weight-bold w-25" })
                 }
