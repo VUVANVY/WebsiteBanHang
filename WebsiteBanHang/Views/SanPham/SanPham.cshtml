@@ -28,7 +28,7 @@
         <div class="col-6 col-md-4">
             <div class="moto-card">
                 <div class="moto-card-img-wrap">
-                    <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })">
+                    <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = ((item.TenSP ?? string.Empty).Replace("/", "-").Replace("\\", "-")) })">
                         <img src="@Url.Content("~/Content/HinhAnhSP/" + item.HinhAnh)" alt="@item.TenSP" />
                     </a>
                     @if (item.Moi == 1) {
@@ -38,7 +38,7 @@
                 <div class="moto-card-body">
                     <p class="card-brand">@(item.NhaSanXuat != null ? item.NhaSanXuat.TenNSX : "Chính hãng")</p>
                     <h6 class="card-name">
-                        <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })">@item.TenSP</a>
+                        <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = ((item.TenSP ?? string.Empty).Replace("/", "-").Replace("\\", "-")) })">@item.TenSP</a>
                     </h6>
                     <div class="card-price-row">
                         <span class="card-price">
@@ -47,7 +47,7 @@
                         </span>
                     </div>
                     <div class="card-actions">
-                        <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = item.TenSP })"
+                        <a href="@Url.RouteUrl("XemChiTiet", new { @id = item.MaSP, @tensp = ((item.TenSP ?? string.Empty).Replace("/", "-").Replace("\\", "-")) })"
                            class="btn-card-detail flex-grow-1">
                             <i class="fas fa-eye me-1"></i>Chi tiết
                         </a>

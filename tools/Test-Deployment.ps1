@@ -611,7 +611,7 @@ FROM dbo.SanPham WHERE DaXoa = 0 ORDER BY MaSP FOR XML PATH('product'), ROOT('pr
 
     $fileBytes = [IO.File]::ReadAllBytes((Join-Path $siteRoot 'Content\HinhAnhSP\download.jpg'))
     $mainUpload = 'deployment-main-' + $runId + '.jpg'
-    $productName = 'Deployment product ' + $runId.Substring(0,8)
+    $productName = 'Deployment product / ' + $runId.Substring(0,8)
     $productFields = @{ TenSP = $productName; DonGia = 20000000; SoLuongTon = 4; LuotXem = 0; Moi = 1; MaNCC = 1; MaLoaiSP = 1; MaNSX = 1; DongCo = 'Synthetic engine'; MoTa = 'Synthetic deployment product.' }
     $productsBeforeInvalidPosts = [int](Invoke-TestSql -Sql 'SELECT COUNT(*) FROM dbo.SanPham;' -Scalar)
     foreach ($invalidFields in @(@{ TenSP = '' }, @{ DonGia = '' }, @{ DonGia = -1 }, @{ SoLuongTon = -1 }, @{ SoLuongTon = 'not-an-integer' })) {
@@ -625,6 +625,10 @@ FROM dbo.SanPham WHERE DaXoa = 0 ORDER BY MaSP FOR XML PATH('product'), ROOT('pr
     }
     $createdProductId = [int](Invoke-TestSql -Sql 'SELECT MaSP FROM dbo.SanPham WHERE TenSP=@name;' -Parameters @{ name = $productName } -Scalar)
     Assert-Check ($createdProduct.Status -eq 302 -and $createdProductId -gt 0 -and [int](Invoke-TestSql -Sql 'SELECT COUNT(*) FROM dbo.SanPham WHERE MaSP=@id AND HinhAnh=@main AND DaXoa=0;' -Parameters @{ id = $createdProductId; main = $mainUpload } -Scalar) -eq 1) 'main-image-only multipart product creation persists the product and image name'
+    $slashNameSearch = Send-TestRequest -Path ('/TimKiem/KQTimKiem?sTuKhoa=' + [uri]::EscapeDataString($productName)) -Session $anonymous
+    $slashNameLink = @(Get-ProductLinks -Html $slashNameSearch.Content | Where-Object Id -eq $createdProductId | Select-Object -First 1)
+    $slashNameDetail = if ($slashNameLink.Count) { Send-TestRequest -Path $slashNameLink[0].Path -Session $anonymous } else { $null }
+    Assert-Check ($slashNameSearch.Status -eq 200 -and $slashNameLink.Count -eq 1 -and $slashNameDetail.Status -eq 200 -and [System.Net.WebUtility]::HtmlDecode($slashNameDetail.Content).Contains($productName)) 'actual rendered slash-name product slug resolves and preserves the original display name'
     foreach ($imageName in @($mainUpload)) {
         $uploadedImage = Send-TestRequest -Path ('/Content/HinhAnhSP/' + $imageName) -Session $anonymous
         Assert-Check ($uploadedImage.Status -eq 200 -and (Test-ImageSignature -Bytes $uploadedImage.Bytes)) 'new product upload is served as an actual image'

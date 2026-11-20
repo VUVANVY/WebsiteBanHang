@@ -27,7 +27,7 @@
             <div class="col-6 col-md-4 col-lg-3">
                 <div class="moto-card">
                     <div class="moto-card-img-wrap">
-                        <a href="@Url.RouteUrl("XemChiTiet", new { id = item.MaSP, tensp = item.TenSP })">
+                        <a href="@Url.RouteUrl("XemChiTiet", new { id = item.MaSP, tensp = ((item.TenSP ?? string.Empty).Replace("/", "-").Replace("\\", "-")) })">
                             <img src="@Url.Content("~/Content/HinhAnhSP/" + item.HinhAnh)"
                                  alt="@item.TenSP" />
                         </a>
@@ -43,7 +43,7 @@
                         </p>
 
                         <h6 class="card-name">
-                            <a href="@Url.RouteUrl("XemChiTiet", new { id = item.MaSP, tensp = item.TenSP })">
+                            <a href="@Url.RouteUrl("XemChiTiet", new { id = item.MaSP, tensp = ((item.TenSP ?? string.Empty).Replace("/", "-").Replace("\\", "-")) })">
                                 @item.TenSP
                             </a>
                         </h6>
@@ -56,7 +56,7 @@
                         </div>
 
                         <div class="card-actions">
-                            <a href="@Url.RouteUrl("XemChiTiet", new { id = item.MaSP, tensp = item.TenSP })"
+                            <a href="@Url.RouteUrl("XemChiTiet", new { id = item.MaSP, tensp = ((item.TenSP ?? string.Empty).Replace("/", "-").Replace("\\", "-")) })"
                                class="btn-card-detail">
                                 <i class="fas fa-eye me-1"></i>Chi tiết
                             </a>
